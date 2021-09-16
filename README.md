@@ -1,3 +1,9 @@
+# Hello Dr. Handel. Welcome to my project github. 
+
+My project proposal is located in the products folder. You can knit the Project_Proposal.RMD to see information on my research topic and dataset. 
+I reccomend looking at the HTML as it is easier on the eyes.
+
+
 # Overview
 
 A template file and folder structure for a data analysis project/paper done with R/Rmarkdown/Github. 

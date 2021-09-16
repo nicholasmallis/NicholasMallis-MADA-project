@@ -1,3 +1,9 @@
+# Hello Dr. Handel. Welcome to my project github. 
+
+My project proposal is located in the products folder. You can knit the Project_Proposal.RMD to see information on my research topic and dataset. 
+I reccomend looking at the HTML as it is easier on the eyes.
+
+
 The folders inside this folder should contain all the products of your project.
 
 For a classical academic project, this will be a peer-reviewed manuscript. 
