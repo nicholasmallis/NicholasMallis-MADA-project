@@ -14,7 +14,7 @@ library(plyr)
 
 #path to different dtasets
 #note the use of the here() package and not absolute paths
-data_location1 <- here::here("data","raw_data","COVID-19_Vaccinations_in_the_United_States_County-2.csv")
+data_location1 <- here::here("data","raw_data","countyvaccination.csv")
 data_location2 <- here::here("data","raw_data","Education-2.csv")
 data_location3 <- here::here("data","raw_data","ruralurbancodes2013-3.csv")
 data_location4 <- here::here("data","raw_data","PovertyEstimates.csv")
@@ -59,8 +59,11 @@ tail(poverty)
 #of eligible people (age 12+) in a county that have been fully vaccinated.
 #we'll also pull in the FIPS # that will be used for merging and 'metro status'
 
+
 #But before that let's get this to only the most recent data. So we'll subset today
-vax <- vax[ which(vax$Date== "09/29/2021"), ]
+#vax <- vax[ which(vax$Date== "09/29/2021"), ]
+#NOTE: I HAD TO DO THIS STEP OUTSIDE OF THE PROJECT BECAUSE
+#THE FILE WAS TOO BIG TO INCLUDE IN THE REPO
 
 glimpse(vax)
 myvars <- c("FIPS", "Series_Complete_12PlusPop_Pct","Metro_status", "Recip_County", "Recip_State")
