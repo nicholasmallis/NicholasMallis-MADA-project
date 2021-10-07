@@ -248,20 +248,4 @@ p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point() + geom_
 p5 <- complete %>% ggplot(aes(x=locality, y=pct_vax)) + geom_boxplot()
 
 
-#processeddata <- rawdata %>% dplyr::filter( Height != "sixty" ) %>% 
-#dplyr::mutate(Height = as.numeric(Height)) %>% 
-#dplyr::filter(Height > 50 & Weight < 1000)
-
-# save data as RDS
-# I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
-# This preserves coding like factors, characters, numeric, etc. 
-# If you save as CSV, that information would get lost.
-# See here for some suggestions on how to store your processed data:
-# http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
-
-# location to save file
-save_data_location <- here::here("data","processed_data","processeddata.rds")
-
-saveRDS(processeddata, file = save_data_location)
-
 

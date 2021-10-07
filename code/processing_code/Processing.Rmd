@@ -1,27 +1,9 @@
 ---
-title: "Project Part 2"
+title: "Processing"
 author: "Nicholas Mallis"
-date: "10/5/2021"
+date: "10/7/2021"
 output: html_document
 ---
-#Introduction
-
-Several sources have reported the relationship between education level and COVID-19 vaccination the individual level using data from surveys and qualitative research. KHN released a report on June 11 that outlines the profile of the unvaccinated. They state that “compared to those who have received a covid-19 vaccine, unvaccinated adults are younger, less educated, more likely to be republicans, people of color, and uninsured.” The complete report can be found here. https://www.kff.org/coronavirus-covid-19/poll-finding/kff-covid-19-vaccine-monitor-profile-of-the-unvaccinated/ Although this has been examined using surveys from individual participants on a smaller scale, there are no current reports or published papers that have studied this relationship using aggregate data from all counties in the US. 
-
-The following analysis aims to examine the relationship between education level and vaccination rate (for people over age 12) at the county level for all counties in the 50 US states. I use public data from CDC on vaccination rates by county and other county characteristics that are available through several different sources on the USDA’s Economic Research website for the analysis. The proposed analysis could provide more information on the association between education and vaccination rate on a larger scale. 
-
-
-#Methods: The Data Sources
-
-####Main Outcome
-The main outcome for this analysis is percent of eligible people (age 12+) in a county that have been fully vaccinated. It was obtained from the CDC’s open-source dataset, "COVID-19 Vaccinations in the United States, County." Here is the link to this dataset -> https://data.cdc.gov/Vaccinations/COVID-19-Vaccinations-in-the-United-States-County/8xkx-amqh This dataset “represents all vaccine partners including jurisdictional partner clinics, retail pharmacies, long-term care facilities, dialysis centers, Federal Emergency Management Agency and Health Resources and Services Administration partner sites, and federal entity facilities.” The data represents vaccination percentages up to 09/29/2021.
-
-####Main Exposure:
-The main exposure for the analysis is percent of adults in each county who have a bachelors degree or higher. The most current county level data on education is available on the USDA’s Economic Research website and can be found if you click here -> https://www.ers.usda.gov/data-products/county-level-data-sets/download-data/ This dataset includes information on education level for all years and I will subset the data to only include observations from the most current year. The most current calculations of education level by county are 5- year averages based on 2015-2019 and they come from the Census Bureau’s American Community Survey. 
-
-####Covariates:
-There are other possible confounders that we are interested in examining including poverty, unemployment, median household income, locality (urban or rural) and health insurance rate. In order to obtain this information, I pull in data from a few more sources. The first three variables are available through the USDA Economic Research Service as well, but in different datasets.  They can be found here on the USDA website -> https://www.ers.usda.gov/data-products/county-level-data-sets/download-data/ The county poverty estimates are model-based estimates from the U.S. Census Bureau's Small Area Income and Poverty Estimate (SAIPE) program. The county unemployment rates are from the Bureau of Labor Statistics (BLS) Local Area Unemployment Statistics (LAUS) program. The county median household income variable comes from the U.S. Census Bureau's Small Area Income and Poverty Estimate (SAIPE) program. The locality (urban or rural) variable comes from from the Rural-Urban Continuum Codes Dataset which is also managed by USDA. This can be found here -> https://www.ers.usda.gov/data-products/rural-urban-continuum-codes/
-
 
 #Methods: Data Importing, Cleaning, and Wrangling
 
