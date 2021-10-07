@@ -248,7 +248,6 @@ p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point() + geom_
 p5 <- complete %>% ggplot(aes(x=locality, y=pct_vax)) + geom_boxplot()
 
 
-
 #processeddata <- rawdata %>% dplyr::filter( Height != "sixty" ) %>% 
 #dplyr::mutate(Height = as.numeric(Height)) %>% 
 #dplyr::filter(Height > 50 & Weight < 1000)
