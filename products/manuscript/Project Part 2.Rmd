@@ -263,6 +263,7 @@ tail(complete, n=50)
 complete <- complete[!is.na(complete$FIPS), ]
 
 
+
 ```
 
 ##Histogram of Main Outcome: Percent Vaccinated
@@ -349,6 +350,16 @@ The table below summarizes the median and interquartile range for each continous
 ```{r, echo=FALSE}
 #printing
 print(table)
+
+#this table will likely end up in the final paper so saved it as a file
+summarytable_file = here("results", "summarytable.rds")
+saveRDS(table, file = summarytable_file)
+```
+
+Now I  display the saved file for an improved aesthetic.
+```{r summarytable,  echo=FALSE}
+resulttable=readRDS("../../results/summarytable.rds")
+knitr::kable(resulttable, caption = 'Table 1. Summary Statistics for US Counties (n=3,142)')
 ```
 
 
@@ -379,6 +390,10 @@ In the next section, I present scatterplots with linear regression overlays to v
 p1 <- complete %>% ggplot(aes(x=pct_bachelors, y=pct_vax)) + geom_point(color="red") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Percent with Bachelors Degree vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Percent of County with a Bachelors Degree or Higher") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 
 print(p1)
+
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure1.png")
+ggsave(filename = figure_file, plot=p1)
 
 #at first glance, there appears to be a linear relationship between our predictor and outcome,
 #but it looks like there a lot of 0s for our outcome (% vaccinated over 12). Let's take a closer look.
@@ -414,8 +429,50 @@ p5
 
 ```
 
+#Tabling Percent Vaccinated by Locality
+```{r}
+#define quantiles of interest
+q = c(.25, .75)
+
+#calculate quantiles by grouping variable
+locality_table <- complete %>%
+  group_by(locality) %>%
+  summarize(median = round(median(pct_vax, na.rm=TRUE), 1),
+            quant25 = round(quantile(pct_vax, probs = q[1], na.rm=TRUE), 1), 
+            quant75 = round(quantile(pct_vax, probs = q[2], na.rm= TRUE), 1))
+
+
+
+#i also combine the 25th percentile and 75th into a character string seperated by a "-"
+locality_table$IQR <- paste(locality_table$quant25, locality_table$quant75, sep = "-")
+
+#then i add parentheses around it using this function
+addparentheses <- function(x){paste("(", x, ")")}
+locality_table$IQR <- addparentheses(locality_table$IQR)
+
+
+# we don't need the first row or middle colums so we delete them
+locality_table <- locality_table[-c(3), -c(3,4)]
+
+names(locality_table)[1] <- "Locality"
+names(locality_table)[2] <- "Median Vaccination Rate (%)"
+
+locality_table
+
+#this table might end up in the final paper so saved it as a file
+summarytable_file2 = here("results", "summarytable2.rds")
+saveRDS(locality_table, file = summarytable_file2)
+```
+
+Now I  display the saved file for an improved aesthetic. 
+```{r summarytable2,  echo=FALSE}
+resulttable=readRDS("../../results/summarytable2.rds")
+knitr::kable(resulttable, caption = 'Table 2. Median and Interquartile Range of Percent Vaccinated by Locality, US Counties (n=3,142)')
+```
+
 ##Mapping:
 Finally, I use the usmap package to produce a figure that represents vaccination rates for each county. Here we can see that the largest cluster of counties with low vaccination rates is in Texas and takes up most of the states surface area. 
+
 ```{r}
 #first we load the usmap package
 library(usmap)
@@ -431,14 +488,15 @@ map <- merge(countypop, complete)
 
 #then we use this new dataset to plot
 mapplot <- plot_usmap(data = map, values = "pct_vax") +
-  scale_fill_continuous(name = "Percent Vaccinated", label = scales::comma, type = "viridis") + 
-  theme(legend.position = "right")
+  scale_fill_continuous(name = "Percent Vaccinated", label = scales::comma, type = "viridis") + theme(legend.position = "right")
 
 #adding a title and theme adjustment
 mapplot + ggtitle("Map of US County Vaccination Rates for Residents Age 12+ by 09/29/2021") +
   theme(panel.background = element_rect(color = "black", fill = "white")) 
 
-
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure2.png")
+ggsave(filename = figure_file, plot=mapplot)
 
 
 ```
@@ -453,3 +511,4 @@ save_data_location <- here::here("data","processed_data","processeddata.rds")
 saveRDS(complete, file = save_data_location)
 
 ```
+
