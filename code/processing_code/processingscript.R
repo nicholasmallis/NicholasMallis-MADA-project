@@ -13,6 +13,7 @@ for (p in mypackages){
     install.packages(p)
     library(p, character.only = TRUE)
   }
+}
 
 #load needed packages. make sure they are installed.
 #library(readr) #for reading in data
