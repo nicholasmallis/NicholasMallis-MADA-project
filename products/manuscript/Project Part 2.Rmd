@@ -441,7 +441,7 @@ p2
 p3 <- complete %>% ggplot(aes(x=pct_poverty, y=pct_vax)) + geom_point(color="green") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Percent of County in Poverty vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Percent of County in Poverty") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p3
 
-p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in Countyy") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in County") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p4
 
 p5 <- ggplot(data=subset(complete, !is.na(locality)), aes(x=locality, y=pct_vax, fill=locality)) + geom_boxplot() + labs(title= "Boxplot of Locality vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Locality") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
