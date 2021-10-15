@@ -135,7 +135,11 @@ ed <- ed[myvars2]
 
 #looks like FIPS.Code is already numeric, but we need need perecent adults with bachelor to be numeric
 #let's go ahead and convert that.
-ed$FIPS.Code <- as.numeric(ed$FIPS.Code)
+#ed$FIPS.Code <- as.numeric(ed$FIPS.Code)
+
+#trying to convert to character
+ed$FIPS.Code <- as.character(ed$FIPS.Code)
+
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(ed)[1] <- "FIPS"
@@ -157,6 +161,11 @@ unemployment <- unemployment[myvars3]
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(unemployment)[1] <- "FIPS"
 
+#converting to character due to issues
+#trying to convert to character
+unemployment$FIPS <- as.character(unemployment$FIPS)
+
+
 #checking
 glimpse(unemployment)
 head(unemployment)
@@ -175,6 +184,11 @@ poverty <- poverty[myvars4]
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(poverty)[1] <- "FIPS"
+
+#converting to character due to issues
+#trying to convert to character
+poverty$FIPS <- as.character(poverty$FIPS)
+
 
 
 #checking
@@ -196,8 +210,9 @@ Below we merge all of the datasets together before analysis.
 
 complete1 <- merge(vax, ed)
 
+glimpse(complete1)
 complete2 <- merge(unemployment, poverty)
-
+glimpse(complete2)
 complete <- merge(complete1, complete2)
 
 #checking. looks good!
