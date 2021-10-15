@@ -32,13 +32,24 @@ In order to explore the possible relationship between education level and vaccin
 #this script loads the raw data, processes and cleans it 
 #and saves it as Rds file in the processed_data folder
 
+#the following code loads different packages and also installs them as needed
+#if they aren't already installed
+mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
+
+for (p in mypackages){
+  if(!require(p, character.only = TRUE)){
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+}
+
 #load needed packages. 
-library(readr) 
-library(plyr)
-library(dplyr)
-library(here) 
-library(tidyverse)
-library(gridExtra)
+#library(readr) 
+#library(plyr)
+#library(dplyr)
+#library(here) 
+#library(tidyverse)
+#library(gridExtra)
 
 
 
@@ -177,7 +188,17 @@ Below we merge all of the datasets together before analysis.
 ```{r}
 #The merge. I really wanted to merge all in one step and
 #I was having trouble. I ended up finding this code using Reduce that #worked though.
-complete <- Reduce(function(x, y) merge(x, y, all=TRUE), list(vax, ed, unemployment, poverty))
+
+#complete <- Reduce(function(x, y) merge(x, y, all=TRUE), list(vax, ed, unemployment, poverty))
+
+#There ended up being some possible problems with what I ran above so I do it again below in several steps
+
+
+complete1 <- merge(vax, ed)
+
+complete2 <- merge(unemployment, poverty)
+
+complete <- merge(complete1, complete2)
 
 #checking. looks good!
 glimpse(complete)
@@ -311,7 +332,6 @@ The following code performs some data management in order to summarize each cont
 ```{r}
 
 
-library(robustbase) 
 num_cols <- unlist(lapply(complete, is.numeric))         # identify numeric columns
 complete_num <- complete[ , num_cols]                    #subset numeric columns of data
           
@@ -474,9 +494,7 @@ knitr::kable(resulttable, caption = 'Table 2. Median and Interquartile Range of 
 Finally, I use the usmap package to produce a figure that represents vaccination rates for each county. Here we can see that the largest cluster of counties with low vaccination rates is in Texas and takes up most of the states surface area. 
 
 ```{r}
-#first we load the usmap package
-library(usmap)
-library(ggplot2)
+
 
 practice <- plot_usmap(regions = "counties") + 
   labs(title = "US Counties",

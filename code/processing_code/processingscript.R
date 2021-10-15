@@ -4,13 +4,23 @@
 #this script loads the raw data, processes and cleans it 
 #and saves it as Rds file in the processed_data folder
 
+#the following code loads different packages and also installs them as needed
+#if they aren't already installed
+mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
+
+for (p in mypackages){
+  if(!require(p, character.only = TRUE)){
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+
 #load needed packages. make sure they are installed.
-library(readr) #for reading in data
-library(dplyr) #for data processing
-library(here) #to set paths
-library(tidyverse)
-library(dplyr)
-library(plyr)
+#library(readr) #for reading in data
+#library(dplyr) #for data processing
+#library(here) #to set paths
+#library(tidyverse)
+#library(dplyr)
+#library(plyr)
 
 #path to different dtasets
 #note the use of the here() package and not absolute paths
@@ -137,7 +147,15 @@ glimpse(poverty)
 
 
 #the merge
-complete <- Reduce(function(x, y) merge(x, y, all=TRUE), list(vax, ed, unemployment, poverty))
+#complete <- Reduce(function(x, y) merge(x, y, all=TRUE), list(vax, ed, unemployment, poverty))
+
+
+#There ended up being some possible problems with what I ran above so I do it again below in several steps
+complete1 <- merge(vax, ed)
+
+complete2 <- merge(unemployment, poverty)
+
+complete <- merge(complete1, complete2)
 
 #checking
 glimpse(complete)
