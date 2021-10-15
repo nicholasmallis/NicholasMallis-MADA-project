@@ -135,10 +135,10 @@ ed <- ed[myvars2]
 
 #looks like FIPS.Code is already numeric, but we need need perecent adults with bachelor to be numeric
 #let's go ahead and convert that.
-#ed$FIPS.Code <- as.numeric(ed$FIPS.Code)
+ed$FIPS.Code <- as.numeric(ed$FIPS.Code)
 
 #trying to convert to character
-ed$FIPS.Code <- as.character(ed$FIPS.Code)
+#ed$FIPS.Code <- as.character(ed$FIPS.Code)
 
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
@@ -163,7 +163,7 @@ names(unemployment)[1] <- "FIPS"
 
 #converting to character due to issues
 #trying to convert to character
-unemployment$FIPS <- as.character(unemployment$FIPS)
+#unemployment$FIPS <- as.character(unemployment$FIPS)
 
 
 #checking
@@ -187,7 +187,7 @@ names(poverty)[1] <- "FIPS"
 
 #converting to character due to issues
 #trying to convert to character
-poverty$FIPS <- as.character(poverty$FIPS)
+#poverty$FIPS <- as.character(poverty$FIPS)
 
 
 
@@ -211,8 +211,10 @@ Below we merge all of the datasets together before analysis.
 complete1 <- merge(vax, ed)
 
 glimpse(complete1)
+
 complete2 <- merge(unemployment, poverty)
 glimpse(complete2)
+
 complete <- merge(complete1, complete2)
 
 #checking. looks good!
@@ -376,7 +378,8 @@ addparentheses <- function(x){paste("(", x, ")")}
 table$IQR <- addparentheses(table$IQR)
 
 # we don't need the first row or middle colums so we delete them
-table <- table[-c(1), -c(2,3)]
+table <- table[ -c(1), -c(2,3)]
+
 rownames(table) <-  c("Percent Vaccinated over 12 years", "Percent with Bachelors Degree or Higher", "Unemployment Rate (%)", "Median Household Income", "Poverty Rate (%)") 
 ```
 

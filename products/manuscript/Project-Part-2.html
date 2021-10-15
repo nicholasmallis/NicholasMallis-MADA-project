@@ -422,10 +422,10 @@ ed &lt;- ed[myvars2]
 
 #looks like FIPS.Code is already numeric, but we need need perecent adults with bachelor to be numeric
 #let's go ahead and convert that.
-#ed$FIPS.Code &lt;- as.numeric(ed$FIPS.Code)
+ed$FIPS.Code &lt;- as.numeric(ed$FIPS.Code)
 
 #trying to convert to character
-ed$FIPS.Code &lt;- as.character(ed$FIPS.Code)
+#ed$FIPS.Code &lt;- as.character(ed$FIPS.Code)
 
 
 #since we'll be merging in FIPS, let's go ahead and change the var name &quot;FIPS.Code&quot;
@@ -435,7 +435,7 @@ names(ed)[1] &lt;- &quot;FIPS&quot;
 glimpse(ed)</code></pre>
 <pre><code>## Rows: 3,283
 ## Columns: 2
-## $ FIPS                                                       &lt;chr&gt; &quot;0&quot;, &quot;1000&quot;…
+## $ FIPS                                                       &lt;dbl&gt; 0, 1000, 10…
 ## $ Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990 &lt;dbl&gt; 20.3, 15.7,…</code></pre>
 <pre class="r"><code>head(ed)</code></pre>
 <pre><code>##   FIPS Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990
@@ -457,14 +457,14 @@ names(unemployment)[1] &lt;- &quot;FIPS&quot;
 
 #converting to character due to issues
 #trying to convert to character
-unemployment$FIPS &lt;- as.character(unemployment$FIPS)
+#unemployment$FIPS &lt;- as.character(unemployment$FIPS)
 
 
 #checking
 glimpse(unemployment)</code></pre>
 <pre><code>## Rows: 3,275
 ## Columns: 3
-## $ FIPS                         &lt;chr&gt; &quot;0&quot;, &quot;1000&quot;, &quot;1001&quot;, &quot;1003&quot;, &quot;1005&quot;, &quot;100…
+## $ FIPS                         &lt;int&gt; 0, 1000, 1001, 1003, 1005, 1007, 1009, 10…
 ## $ Unemployment_rate_2020       &lt;dbl&gt; 8.1, 5.9, 4.9, 5.6, 7.0, 6.6, 4.1, 5.5, 8…
 ## $ Median_Household_Income_2019 &lt;chr&gt; &quot;65,712&quot;, &quot;51,771&quot;, &quot;58,233&quot;, &quot;59,871&quot;, &quot;…</code></pre>
 <pre class="r"><code>head(unemployment)</code></pre>
@@ -490,7 +490,7 @@ names(poverty)[1] &lt;- &quot;FIPS&quot;
 
 #converting to character due to issues
 #trying to convert to character
-poverty$FIPS &lt;- as.character(poverty$FIPS)
+#poverty$FIPS &lt;- as.character(poverty$FIPS)
 
 
 
@@ -498,7 +498,7 @@ poverty$FIPS &lt;- as.character(poverty$FIPS)
 glimpse(poverty)</code></pre>
 <pre><code>## Rows: 3,193
 ## Columns: 2
-## $ FIPS           &lt;chr&gt; &quot;0&quot;, &quot;1000&quot;, &quot;1001&quot;, &quot;1003&quot;, &quot;1005&quot;, &quot;1007&quot;, &quot;1009&quot;, &quot;1…
+## $ FIPS           &lt;int&gt; 0, 1000, 1001, 1003, 1005, 1007, 1009, 1011, 1013, 1015…
 ## $ PCTPOVALL_2019 &lt;dbl&gt; 12.3, 15.6, 12.1, 10.1, 27.1, 20.3, 16.3, 30.0, 21.6, 1…</code></pre>
 <pre class="r"><code>head(poverty)</code></pre>
 <pre><code>##   FIPS PCTPOVALL_2019
@@ -535,10 +535,10 @@ glimpse(complete1)</code></pre>
 glimpse(complete2)</code></pre>
 <pre><code>## Rows: 3,193
 ## Columns: 4
-## $ FIPS                         &lt;chr&gt; &quot;0&quot;, &quot;1000&quot;, &quot;10000&quot;, &quot;10001&quot;, &quot;10003&quot;, &quot;…
-## $ Unemployment_rate_2020       &lt;dbl&gt; 8.1, 5.9, 7.8, 8.6, 7.7, 7.5, 4.9, 5.6, 7…
-## $ Median_Household_Income_2019 &lt;chr&gt; &quot;65,712&quot;, &quot;51,771&quot;, &quot;70,348&quot;, &quot;58,804&quot;, &quot;…
-## $ PCTPOVALL_2019               &lt;dbl&gt; 12.3, 15.6, 11.2, 12.7, 10.4, 12.1, 12.1,…</code></pre>
+## $ FIPS                         &lt;int&gt; 0, 1000, 1001, 1003, 1005, 1007, 1009, 10…
+## $ Unemployment_rate_2020       &lt;dbl&gt; 8.1, 5.9, 4.9, 5.6, 7.0, 6.6, 4.1, 5.5, 8…
+## $ Median_Household_Income_2019 &lt;chr&gt; &quot;65,712&quot;, &quot;51,771&quot;, &quot;58,233&quot;, &quot;59,871&quot;, &quot;…
+## $ PCTPOVALL_2019               &lt;dbl&gt; 12.3, 15.6, 12.1, 10.1, 27.1, 20.3, 16.3,…</code></pre>
 <pre class="r"><code>complete &lt;- merge(complete1, complete2)
 
 #checking. looks good!
@@ -831,7 +831,8 @@ addparentheses &lt;- function(x){paste(&quot;(&quot;, x, &quot;)&quot;)}
 table$IQR &lt;- addparentheses(table$IQR)
 
 # we don't need the first row or middle colums so we delete them
-table &lt;- table[-c(1), -c(2,3)]
+table &lt;- table[ -c(1), -c(2,3)]
+
 rownames(table) &lt;-  c(&quot;Percent Vaccinated over 12 years&quot;, &quot;Percent with Bachelors Degree or Higher&quot;, &quot;Unemployment Rate (%)&quot;, &quot;Median Household Income&quot;, &quot;Poverty Rate (%)&quot;) </code></pre>
 <div id="table-of-summary-statistics" class="section level2">
 <h2>Table of Summary Statistics:</h2>
