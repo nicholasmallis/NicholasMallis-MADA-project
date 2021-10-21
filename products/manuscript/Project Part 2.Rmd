@@ -125,21 +125,14 @@ glimpse(vax)
 In a similar manner, I read in the education data and subset the variables needed (FIPS.Code and percent of adults with a bachelors degree or higher). There is one extra step here though. I rename the variable FIPS.Code to FIPS. This matches the variable from the vaccine dataset and will allow me to merge effectively.
 ```{r}
 #now let's look at the data on the main exposure
-#glimpse(ed) commenting this out for ease of reading RMD 
+glimpse(ed)
+#commenting this out for ease of reading RMD 
 
 #subsetting what we need
 myvars2 <- c("FIPS.Code", "Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990")
 ed <- ed[myvars2]
 
 #print(ed) I comment this out to make the document shorter
-
-#looks like FIPS.Code is already numeric, but we need need perecent adults with bachelor to be numeric
-#let's go ahead and convert that.
-ed$FIPS.Code <- as.numeric(ed$FIPS.Code)
-
-#trying to convert to character
-#ed$FIPS.Code <- as.character(ed$FIPS.Code)
-
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(ed)[1] <- "FIPS"
@@ -178,7 +171,7 @@ And finally we pull in data to obtain the most recent percentage of people of al
 
 #glimpse(poverty) commenting this out
 
-#subsetting waht we need
+#subsetting what we need
 myvars4 <- c("FIPStxt", "PCTPOVALL_2019" )
 poverty <- poverty[myvars4]
 
@@ -290,15 +283,7 @@ table(complete$locality)
 prop.table(table(complete$locality))
 
 #now let's explore what percent of each variable is missing
-#we see here that there is about 1% missing from most of our variables, which isn't so bad
 colMeans(is.na(complete))
-
-#let's take a quick look at the bottom of the new dataset. here we see where a lot of the missing comes from. it looks like everything is missing from these last 50 observations. i am going to take note of this, but delete them.
-tail(complete, n=50)
-
-
-#here i subset again
-complete <- complete[!is.na(complete$FIPS), ]
 
 
 

@@ -1,7 +1,7 @@
 ---
-title: "Processing"
+title: "Processing and Data Exploration"
 author: "Nicholas Mallis"
-date: "10/7/2021"
+date: "10/5/2021"
 output: html_document
 ---
 
@@ -14,13 +14,24 @@ In order to explore the possible relationship between education level and vaccin
 #this script loads the raw data, processes and cleans it 
 #and saves it as Rds file in the processed_data folder
 
+#the following code loads different packages and also installs them as needed
+#if they aren't already installed
+mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
+
+for (p in mypackages){
+  if(!require(p, character.only = TRUE)){
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+}
+
 #load needed packages. 
-library(readr) 
-library(plyr)
-library(dplyr)
-library(here) 
-library(tidyverse)
-library(gridExtra)
+#library(readr) 
+#library(plyr)
+#library(dplyr)
+#library(here) 
+#library(tidyverse)
+#library(gridExtra)
 
 
 
@@ -96,17 +107,14 @@ glimpse(vax)
 In a similar manner, I read in the education data and subset the variables needed (FIPS.Code and percent of adults with a bachelors degree or higher). There is one extra step here though. I rename the variable FIPS.Code to FIPS. This matches the variable from the vaccine dataset and will allow me to merge effectively.
 ```{r}
 #now let's look at the data on the main exposure
-#glimpse(ed) commenting this out for ease of reading RMD 
+glimpse(ed)
+#commenting this out for ease of reading RMD 
 
 #subsetting what we need
 myvars2 <- c("FIPS.Code", "Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990")
 ed <- ed[myvars2]
 
 #print(ed) I comment this out to make the document shorter
-
-#looks like FIPS.Code is already numeric, but we need need perecent adults with bachelor to be numeric
-#let's go ahead and convert that.
-ed$FIPS.Code <- as.numeric(ed$FIPS.Code)
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(ed)[1] <- "FIPS"
@@ -128,6 +136,11 @@ unemployment <- unemployment[myvars3]
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(unemployment)[1] <- "FIPS"
 
+#converting to character due to issues
+#trying to convert to character
+#unemployment$FIPS <- as.character(unemployment$FIPS)
+
+
 #checking
 glimpse(unemployment)
 head(unemployment)
@@ -140,12 +153,17 @@ And finally we pull in data to obtain the most recent percentage of people of al
 
 #glimpse(poverty) commenting this out
 
-#subsetting waht we need
+#subsetting what we need
 myvars4 <- c("FIPStxt", "PCTPOVALL_2019" )
 poverty <- poverty[myvars4]
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
 names(poverty)[1] <- "FIPS"
+
+#converting to character due to issues
+#trying to convert to character
+#poverty$FIPS <- as.character(poverty$FIPS)
+
 
 
 #checking
@@ -159,7 +177,20 @@ Below we merge all of the datasets together before analysis.
 ```{r}
 #The merge. I really wanted to merge all in one step and
 #I was having trouble. I ended up finding this code using Reduce that #worked though.
-complete <- Reduce(function(x, y) merge(x, y, all=TRUE), list(vax, ed, unemployment, poverty))
+
+#complete <- Reduce(function(x, y) merge(x, y, all=TRUE), list(vax, ed, unemployment, poverty))
+
+#There ended up being some possible problems with what I ran above so I do it again below in several steps
+
+
+complete1 <- merge(vax, ed)
+
+glimpse(complete1)
+
+complete2 <- merge(unemployment, poverty)
+glimpse(complete2)
+
+complete <- merge(complete1, complete2)
 
 #checking. looks good!
 glimpse(complete)
@@ -234,16 +265,9 @@ table(complete$locality)
 prop.table(table(complete$locality))
 
 #now let's explore what percent of each variable is missing
-#we see here that there is about 1% missing from most of our variables, which isn't so bad
 colMeans(is.na(complete))
 
-#let's take a quick look at the bottom of the new dataset. here we see where a lot of the missing comes from. it looks like everything is missing from these last 50 observations. i am going to take note of this, but delete them.
-tail(complete, n=50)
-
-
-#here i subset again
-complete <- complete[!is.na(complete$FIPS), ]
-
+sum(is.na(complete))
 
 ```
 
@@ -292,7 +316,6 @@ The following code performs some data management in order to summarize each cont
 ```{r}
 
 
-library(robustbase) 
 num_cols <- unlist(lapply(complete, is.numeric))         # identify numeric columns
 complete_num <- complete[ , num_cols]                    #subset numeric columns of data
           
@@ -322,7 +345,8 @@ addparentheses <- function(x){paste("(", x, ")")}
 table$IQR <- addparentheses(table$IQR)
 
 # we don't need the first row or middle colums so we delete them
-table <- table[-c(1), -c(2,3)]
+table <- table[ -c(1), -c(2,3)]
+
 rownames(table) <-  c("Percent Vaccinated over 12 years", "Percent with Bachelors Degree or Higher", "Unemployment Rate (%)", "Median Household Income", "Poverty Rate (%)") 
 ```
 
@@ -331,6 +355,16 @@ The table below summarizes the median and interquartile range for each continous
 ```{r, echo=FALSE}
 #printing
 print(table)
+
+#this table will likely end up in the final paper so saved it as a file
+summarytable_file = here("results", "summarytable.rds")
+saveRDS(table, file = summarytable_file)
+```
+
+Now I  display the saved file for an improved aesthetic.
+```{r summarytable,  echo=FALSE}
+resulttable=readRDS("../../results/summarytable.rds")
+knitr::kable(resulttable, caption = 'Table 1. Summary Statistics for US Counties (n=3,142)')
 ```
 
 
@@ -362,6 +396,10 @@ p1 <- complete %>% ggplot(aes(x=pct_bachelors, y=pct_vax)) + geom_point(color="r
 
 print(p1)
 
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure1.png")
+ggsave(filename = figure_file, plot=p1)
+
 #at first glance, there appears to be a linear relationship between our predictor and outcome,
 #but it looks like there a lot of 0s for our outcome (% vaccinated over 12). Let's take a closer look.
 
@@ -388,7 +426,7 @@ p2
 p3 <- complete %>% ggplot(aes(x=pct_poverty, y=pct_vax)) + geom_point(color="green") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Percent of County in Poverty vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Percent of County in Poverty") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p3
 
-p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in Countyy") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in County") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p4
 
 p5 <- ggplot(data=subset(complete, !is.na(locality)), aes(x=locality, y=pct_vax, fill=locality)) + geom_boxplot() + labs(title= "Boxplot of Locality vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Locality") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
@@ -396,12 +434,52 @@ p5
 
 ```
 
+#Tabling Percent Vaccinated by Locality
+```{r}
+#define quantiles of interest
+q = c(.25, .75)
+
+#calculate quantiles by grouping variable
+locality_table <- complete %>%
+  group_by(locality) %>%
+  summarize(median = round(median(pct_vax, na.rm=TRUE), 1),
+            quant25 = round(quantile(pct_vax, probs = q[1], na.rm=TRUE), 1), 
+            quant75 = round(quantile(pct_vax, probs = q[2], na.rm= TRUE), 1))
+
+
+
+#i also combine the 25th percentile and 75th into a character string seperated by a "-"
+locality_table$IQR <- paste(locality_table$quant25, locality_table$quant75, sep = "-")
+
+#then i add parentheses around it using this function
+addparentheses <- function(x){paste("(", x, ")")}
+locality_table$IQR <- addparentheses(locality_table$IQR)
+
+
+# we don't need the first row or middle colums so we delete them
+locality_table <- locality_table[-c(3), -c(3,4)]
+
+names(locality_table)[1] <- "Locality"
+names(locality_table)[2] <- "Median Vaccination Rate (%)"
+
+locality_table
+
+#this table might end up in the final paper so saved it as a file
+summarytable_file2 = here("results", "summarytable2.rds")
+saveRDS(locality_table, file = summarytable_file2)
+```
+
+Now I  display the saved file for an improved aesthetic. 
+```{r summarytable2,  echo=FALSE}
+resulttable=readRDS("../../results/summarytable2.rds")
+knitr::kable(resulttable, caption = 'Table 2. Median and Interquartile Range of Percent Vaccinated by Locality, US Counties (n=3,142)')
+```
+
 ##Mapping:
 Finally, I use the usmap package to produce a figure that represents vaccination rates for each county. Here we can see that the largest cluster of counties with low vaccination rates is in Texas and takes up most of the states surface area. 
+
 ```{r}
-#first we load the usmap package
-library(usmap)
-library(ggplot2)
+
 
 practice <- plot_usmap(regions = "counties") + 
   labs(title = "US Counties",
@@ -413,14 +491,15 @@ map <- merge(countypop, complete)
 
 #then we use this new dataset to plot
 mapplot <- plot_usmap(data = map, values = "pct_vax") +
-  scale_fill_continuous(name = "Percent Vaccinated", label = scales::comma, type = "viridis") + 
-  theme(legend.position = "right")
+  scale_fill_continuous(name = "Percent Vaccinated", label = scales::comma, type = "viridis") + theme(legend.position = "right")
 
 #adding a title and theme adjustment
 mapplot + ggtitle("Map of US County Vaccination Rates for Residents Age 12+ by 09/29/2021") +
   theme(panel.background = element_rect(color = "black", fill = "white")) 
 
-
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure2.png")
+ggsave(filename = figure_file, plot=mapplot)
 
 
 ```
@@ -435,3 +514,4 @@ save_data_location <- here::here("data","processed_data","processeddata.rds")
 saveRDS(complete, file = save_data_location)
 
 ```
+
