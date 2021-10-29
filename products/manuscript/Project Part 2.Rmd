@@ -366,8 +366,6 @@ table$IQR <- addparentheses(table$IQR)
 table <- table[ -c(1), -c(2,3)]
 
 rownames(table) <-  c("Percent Vaccinated over 12 years", "Percent with Bachelors Degree or Higher", "Unemployment Rate (%)", "Median Household Income", "Poverty Rate (%)") 
-
-
 ```
 
 ##Table of Summary Statistics:

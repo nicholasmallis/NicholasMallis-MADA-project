@@ -139,4 +139,3 @@ saveRDS(lm_fit_locality_table, file = summarytable_file7)
 
 
 
-
