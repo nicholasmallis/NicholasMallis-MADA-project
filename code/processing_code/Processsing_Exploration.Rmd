@@ -505,7 +505,6 @@ ggsave(filename = figure_file, plot=mapplot)
 
 ```
 
-
 Finally, we save our dataset to the processed_data folder below for future analysis.
 
 ```{r}
