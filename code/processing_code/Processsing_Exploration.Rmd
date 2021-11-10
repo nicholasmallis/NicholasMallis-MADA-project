@@ -98,6 +98,7 @@ vax$FIPS[vax$FIPS=='UNK'] <- NA
 vax$FIPS <- as.numeric(vax$FIPS)
 vax$Series_Complete_12PlusPop_Pct <- as.numeric(vax$Series_Complete_12PlusPop_Pct)
 
+vax$Series_Complete_12PlusPop_Pct
 
 #checking. looks good
 head(vax)
