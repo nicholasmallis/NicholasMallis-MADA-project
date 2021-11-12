@@ -1,0 +1,111 @@
+---
+title: "Supplemental"
+author: "Nicholas Mallis"
+date: "11/12/2021"
+output: html_document
+---
+## Results: Simple Linear Regression Model
+
+The figures and tables below examine the bivariate associations between each predicator and the outcome. Looking at the main exposure, education, we see that a one unit increase in percent of county with bachelor’s degree is associated with 1.02 unit increase in vaccination rate (p< 0.0001). This is displayed graphically in the scatterplot and linear regression overlay in figure 2. Table 3 shows the performance statistics on this model. The simple model had an r-squared value of 0.12 and an AIC of 26673.85.
+
+Simple Models with Covariates
+A one unit increase in county median income is associated with a slight increase (0.0004) in vaccination rate (p< 0.0001). This is displayed graphically in the scatter plot and linear regression overlay in figure 3. Regarding poverty rate, we see that a one unit increase in poverty rate is associated with a .78 decrease in vaccination rate (p< 0.0001). This is displayed graphically in the scatter plot and linear regression overlay in figure 4. A one unit increase in unemployment rate is associated with a 0.86 decrease in vaccination rate (p< 0.0001). This is displayed graphically in the scatter plot and linear regression overlay in figure 5. The mean vaccination rate is 7.5 percentage points units lower in non-metro areas compared with metro areas (p< 0.0001). This is displayed graphically in the stratified boxplots in figure 6.
+
+## Simple Linear Regression Model
+
+
+```{r lm_fit_table,  echo=FALSE}
+resulttable=readRDS("../../results/lm_fit_table.rds")
+knitr::kable(resulttable, caption = 'Table 2. Results of the simple linear regression model with percent of county with bachelors degree as the predictor and percent of county vaccinated as the outcome')
+```
+
+
+
+```{r lm_fit_table2,  echo=FALSE}
+resulttable2=readRDS("../../results/lm_fit_stats.rds")
+knitr::kable(resulttable2, caption = 'Table 3. Performance statistics on simple model percent of county with bachelors degree as the predictor and percent of county vaccinated as the outcome')
+```
+
+
+Figure 3. Scatterplot and linear regression overlay with median household income of county as the predictor and percent of county vaccinated as the outcome
+```{r resultfigure3, echo=FALSE}
+knitr::include_graphics("../../results/resultfigure_median_income.png")
+```
+
+
+```{r lm_fit_table5,  echo=FALSE}
+resulttable5=readRDS("../../results/lm_fit_median.rds")
+knitr::kable(resulttable5, caption = 'Table 4. Results of the simple linear regression model with median household income of county as the predictor and percent of county vaccinated as the outcome')
+```
+
+
+
+
+Figure 4. Scatterplot and linear regression overlay with poverty rate of county as the predictor and percent of county vaccinated as the outcome
+```{r resultfigure4, echo=FALSE}
+knitr::include_graphics("../../results/resultfigure_poverty.png")
+```
+
+
+```{r lm_fit_table6,  echo=FALSE}
+resulttable6=readRDS("../../results/lm_fit_poverty.rds")
+knitr::kable(resulttable6, caption = 'Table 5. Results of the simple linear regression model with poverty rate of county as the predictor and percent of county vaccinated as the outcome')
+```
+
+
+
+
+
+Figure 5. Scatterplot and linear regression overlay with unemployment rate of county as the predictor and percent of county vaccinated as the outcome
+```{r resultfigure5, echo=FALSE}
+knitr::include_graphics("../../results/resultfigure_unemployment.png")
+```
+
+
+```{r lm_fit_table7,  echo=FALSE}
+resulttable7=readRDS("../../results/lm_fit_unemployment.rds")
+knitr::kable(resulttable7, caption = 'Table 6. Results of the simple linear regression model with poverty rate of county as the predictor and percent of county vaccinated as the outcome')
+```
+
+
+
+Figure 6. Stratified Boxplots of locality (metro or non-metro) and percent of county vaccinated
+```{r resultfigure6,  echo=FALSE}
+knitr::include_graphics("../../results/resultfigure_locality.png")
+```
+
+
+```{r lm_fit_table8,  echo=FALSE}
+resulttable8=readRDS("../../results/lm_fit_locality.rds")
+knitr::kable(resulttable8, caption = 'Table 7. Results of the simple linear regression model with locality (metro or non-metro) as the predictor and percent of county vaccinated as the outcome')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Results: Multivariate Regression Model
+Table 8 below displays the results to the multivariate regression model.  When controlling for other covariates, a one unit increase in percent of county with a bachelor’s degree was associated with 0.82 unit increase in vaccination rate (p< 0.0001). Table 9 shows the performance statistics on the multivariate regression model with all predictors. Here we see that the r-squared value was 0.16 and the AIC was 26534.57. The multivariate model had a higher r-squared value and a lower AIC compared with the simple model, indicating that it might be a better fit, but model improvements will be made in the next steps to assure that we are using the best model.  
+
+
+## Multivariate Linear Regression Model
+
+```{r lm_fit_table3,  echo=FALSE}
+resulttable3=readRDS("../../results/lm_fit_table2.rds")
+knitr::kable(resulttable3, caption = 'Table 8. Results of multivariate regression model with all predictors')
+```
+
+
+```{r lm_fit_table4,  echo=FALSE}
+resulttable4=readRDS("../../results/lm_fit_stats2.rds")
+knitr::kable(resulttable4, caption = 'Table 9. Performance statistics on multivariate regression model with all predictors')
+```
+

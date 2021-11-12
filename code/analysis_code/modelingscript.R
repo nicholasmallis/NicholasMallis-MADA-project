@@ -35,7 +35,7 @@ lm_fit
 lm_fit_table <- tidy(lm_fit)
 
 # saved it as a file
-summarytable_file = here("results", "lm_fit_table.rds")
+summarytable_file = here:here("results", "lm_fit_table.rds")
 saveRDS(lm_fit_table, file = summarytable_file)
 
 # using glance to get statistics

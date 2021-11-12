@@ -1,0 +1,316 @@
+---
+title: "Data Exploration"
+author: "Nicholas Mallis"
+date: "11/11/2021"
+output: html_document
+---
+
+
+Loading packages and then importing processed data
+```{r message=FALSE}
+#the following code loads different packages and also installs them as needed
+#if they aren't already installed
+mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
+
+for (p in mypackages){
+  if(!require(p, character.only = TRUE)){
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+}
+
+
+# setting path
+data_loc <- here::here("data","processed_data","processeddata.rds")
+
+# reading in data
+complete <- readRDS(data_loc)
+
+glimpse(complete)
+```
+
+
+#Exploratory Analysis 
+In the following section, I examine each variable with a five number summary and calculate the percent missing of each variable. I also plot histograms to check the distribution of each variable. For locality, the one categorcial variable, I use a table statement nested within a prop.table to calculate the percentages and plot a stratified frequency chart.
+```{r}
+
+
+#now let's do a five number summary for each continuous variable
+fivenum(complete$pct_vax)
+fivenum(complete$pct_bachelors)
+fivenum(complete$unemployment)
+fivenum(complete$median_income)
+fivenum(complete$pct_poverty)
+
+#now let's look at the categorical variable
+table(complete$locality)
+prop.table(table(complete$locality))
+
+#now let's explore what percent of each variable is missing
+colMeans(is.na(complete))
+
+
+
+```
+
+##Histogram of Main Outcome: Percent Vaccinated
+The figure below is a histogram of the outcome variable, percent vaccinated in each county. Here we see that the data is skewed with a lot of observations close to 0%. The median appears to be close to %48.
+```{r, warning=FALSE}
+#Now some plotting of distribution for each variable
+
+
+#here we do % vaccinated
+a <- complete %>% ggplot(aes(x=pct_vax)) + geom_histogram(fill="red", binwidth = 5.) + labs(title= "Histogram of Percent Vaccinated by County (USA, 09/29/2021)") + xlab("Histogram of Percent Vaccinated by County") +  ylab("Count") + theme_classic()
+a
+```
+
+##Histogram of Main Predictor: Percent With Bachelors Degree
+The figure below is a histogram of the main predictor variable, percent with a bachelors degree in each county. Here we see that the data is skewed with a tail to the right.
+```{r, warning=FALSE}
+#here we do % bachelors
+b <- complete %>% ggplot(aes(x=pct_bachelors)) + geom_histogram(fill="blue", binwidth = 5) + xlim(0, 75) + labs(title= "Histogram of Percent with Bachelors Degree by County (USA)") + xlab("Histogram of Percent with Bachelors by County") +  ylab("Count") + theme_classic() 
+b
+```
+
+
+##Histograms of Other Continuous Covariates:
+Here we can see that the other continuous variables do not appear to be normally distributed. Due to this, we will report medians and IQR's in our summary statistics table.
+
+
+```{r echo=FALSE, warning=FALSE}
+#here we do % unemployment
+c <- complete %>% ggplot(aes(x=unemployment)) + geom_histogram(fill="green", binwidth = 5) + xlim(0, 75) + labs(title= "Histogram of Unemployment Rate by County (USA)") + xlab("Histogram of Unemployment Rate by County") +  ylab("Count") + theme_classic()
+c
+
+#here we do % poverty
+d <- complete %>% ggplot(aes(x=pct_poverty)) + geom_histogram(fill="purple", binwidth = 5) + xlim(0, 75) + labs(title= "Histogram of Poverty Rate by County (USA)") + xlab("Histogram of Poverty Rate by County") +  ylab("Count") + theme_classic()
+d
+
+#here we do median income
+e <- complete %>% ggplot(aes(x=median_income)) + geom_histogram(fill= "orange", binwidth = 10000) + labs(title= "Histogram of Median Income by County (USA)") + xlab("Histogram of Median Income by County") +  ylab("Count") + theme_classic()
+e
+
+```
+
+#More Data Management
+The following code performs some data management in order to summarize each continuous variable.
+
+```{r}
+
+
+num_cols <- unlist(lapply(complete, is.numeric))         # identify numeric columns
+complete_num <- complete[ , num_cols]                    #subset numeric columns of data
+          
+
+
+#here use a function to perform multiple calculations on the variables
+#to get the median and IQR. notice that I use a transposition to get 
+#it in working order
+table <- as.data.frame( t(sapply(complete_num, function(x) c(
+                         "Median" = median(x, na.rm = T),
+                          "Min"  =  min(x, na.rm = T),
+                          "Max"  = max(x, na.rm = T),
+                         "25TH PCT" = unname(quantile(x, 0.25, na.rm = T)),
+                         "75TH PCT" = unname(quantile(x, 0.75, na.rm = T)))
+                    
+                  
+)))
+ 
+#below I do a some more data management to add commas to large figures
+table$Median <- prettyNum(table$Median, big.mark = ",", scientific = FALSE) 
+table$Min <- prettyNum(table$Min, big.mark = ",", scientific = FALSE) 
+table$Max <- prettyNum(table$Max, big.mark = ",", scientific = FALSE) 
+table$`25TH PCT` <- prettyNum(table$`25TH PCT`, big.mark = ",", scientific = FALSE) 
+table$`75TH PCT` <- prettyNum(table$`75TH PCT`, big.mark = ",", scientific = FALSE) 
+
+#i also combine the 25th percentile and 75th into a character string seperated by a "-"
+table$IQR <- paste(table$`25TH PCT`, table$`75TH PCT`, sep = "-")
+
+#then i add parentheses around it using this function
+addparentheses <- function(x){paste("(", x, ")")}
+table$IQR <- addparentheses(table$IQR)
+
+# we don't need the first row or middle colums so we delete them
+table <- table[ -c(1), -c(4,5)]
+
+rownames(table) <-  c("Percent Vaccinated over 12 years", "Percent with Bachelors Degree or Higher", "Unemployment Rate (%)", "Median Household Income", "Poverty Rate (%)") 
+```
+
+##Table of Summary Statistics:
+The table below summarizes the median and interquartile range for each continous variable in the analysis. 
+```{r, echo=FALSE}
+#printing
+print(table)
+
+#this table will likely end up in the final paper so saved it as a file
+summarytable_file = here("results", "summarytable.rds")
+saveRDS(table, file = summarytable_file)
+```
+
+Now I  display the saved file for an improved aesthetic.
+```{r summarytable,  echo=FALSE}
+resulttable=readRDS("../../results/summarytable.rds")
+knitr::kable(resulttable, caption = 'Table 1. Summary Statistics for US Counties (n=3,142)')
+```
+
+
+##Plotting The One Categorical Variable: Locality
+```{r, results='hide' , warning=FALSE, echo=FALSE, message=FALSE }
+#and finally we look at locality
+f <- complete %>% ggplot(aes(x=locality, fill=locality)) + geom_bar() +
+labs(title= "Bar Chart of Frequency of Counties by Locality (USA)") + xlab("Locality") +  ylab("Count") + theme_classic()
+
+#looks like we've got some missing here...
+table(complete$locality)
+#let's convert the blanks to missing
+complete$locality[complete$locality == ""] <- NA
+```
+
+```{r, echo=FALSE}
+#let's try this one again, but without the missing observations
+g <- ggplot(data=subset(complete, !is.na(locality)), aes(x=locality, fill=locality)) + geom_bar() +
+labs(title= "Bar Chart of Frequency of Counties by Locality (USA)") + xlab("Locality") +  ylab("Count") + theme_classic()
+g
+```
+
+#Further Exploratory Analysis: Main Research Question 
+In the next section, I present scatterplots with linear regression overlays to visualize possible univariate associations between the continuous predictors and outcome. I also present a strafied boxplot by our one categorical predictor, locality. First, I plot percent with bachelors degree or higher vs percent vaccinated. From the scatterplot, we see that there seems to be a positive association. As county bachelors degree percentages increase, percent vaccinated increases. 
+```{r, warning=FALSE, message=FALSE}
+
+#now let's do a simple scatter plot of our main predictor and outcome to explore the relationship
+p1 <- complete %>% ggplot(aes(x=pct_bachelors, y=pct_vax)) + geom_point(color="red", size= .8) + geom_smooth(method='lm', color="black") + 
+  labs(title= "Scatterplot of Education vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Percent of County with a Bachelors Degree or Higher") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+
+print(p1)
+
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure1.png")
+ggsave(filename = figure_file, plot=p1)
+
+#at first glance, there appears to be a linear relationship between our predictor and outcome,
+#but it looks like there a lot of 0s for our outcome (% vaccinated over 12). Let's take a closer look.
+
+#it looks like we have 268 of the counties with 0% vaccination. i'm wondering if this could be an error or 
+#if some counties haven't reported.
+count <- length(which(complete$pct_vax == 0))      
+
+count
+```
+
+
+#Further Exploratory Analysis: Covariates
+From the first scatterplot, we see that there seems to be a positive association between median household income and vaccination rate. As median household income increases, percent vaccinated increases. This is opposite with poverty rate. As poverty rate increases, percent vaccinated decreases. Regarding unemployment, there is a slight positive association with percent vaccinated. Based the on box plots stratifed by locality, we see that counties labeled as metro have a higher median vaccination rate compared with those labeled as non-metro.
+
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+#now some more exploration with other variables
+#let's look at income...
+
+p2 <- complete %>% ggplot(aes(x=median_income, y=pct_vax)) + geom_point(color="blue") + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Median Income vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Median County Income") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p2
+
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure_median_income.png")
+ggsave(filename = figure_file, plot=p2)
+
+p3 <- complete %>% ggplot(aes(x=pct_poverty, y=pct_vax)) + geom_point(color="green", size=.5) + geom_smooth(method='lm', color="black") +   xlim(0, 100) + ylim(0,100) +  coord_fixed() +
+  labs(title= "Scatterplot of Percent of County in Poverty vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Percent of County in Poverty") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p3
+
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure_poverty.png")
+ggsave(filename = figure_file, plot=p3)
+
+p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple", size=.5) + geom_smooth(method='lm', color="black") +   xlim(0, 100) + ylim(0,100) +  coord_fixed() + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in County") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p4
+
+
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure_unemployment.png")
+ggsave(filename = figure_file, plot=p4)
+
+
+
+p5 <- ggplot(data=subset(complete, !is.na(locality)), aes(x=locality, y=pct_vax, fill=locality)) + geom_boxplot() + labs(title= "Boxplot of Locality vs Percent Vaccinated", subtitle = ("All Counties, USA")) +  xlab("Locality") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p5
+
+
+figure_file = here("results","resultfigure_locality.png")
+ggsave(filename = figure_file, plot=p5)
+
+
+```
+
+#Tabling Percent Vaccinated by Locality
+```{r}
+#define quantiles of interest
+q = c(.25, .75)
+
+#calculate quantiles by grouping variable
+locality_table <- complete %>%
+  group_by(locality) %>%
+  summarize(median = round(median(pct_vax, na.rm=TRUE), 1),
+            quant25 = round(quantile(pct_vax, probs = q[1], na.rm=TRUE), 1), 
+            quant75 = round(quantile(pct_vax, probs = q[2], na.rm= TRUE), 1))
+
+
+
+#i also combine the 25th percentile and 75th into a character string seperated by a "-"
+locality_table$IQR <- paste(locality_table$quant25, locality_table$quant75, sep = "-")
+
+#then i add parentheses around it using this function
+addparentheses <- function(x){paste("(", x, ")")}
+locality_table$IQR <- addparentheses(locality_table$IQR)
+
+
+# we don't need the first row or middle colums so we delete them
+locality_table <- locality_table[-c(3), -c(3,4)]
+
+names(locality_table)[1] <- "Locality"
+names(locality_table)[2] <- "Median Vaccination Rate (%)"
+
+locality_table
+
+#this table might end up in the final paper so saved it as a file
+summarytable_file2 = here("results", "summarytable2.rds")
+saveRDS(locality_table, file = summarytable_file2)
+```
+
+Now I  display the saved file for an improved aesthetic. 
+```{r summarytable2,  echo=FALSE}
+resulttable=readRDS("../../results/summarytable2.rds")
+knitr::kable(resulttable, caption = 'Table 2. Median and Interquartile Range of Percent Vaccinated by Locality, US Counties (n=3,142)')
+```
+
+##Mapping:
+Finally, I use the usmap package to produce a figure that represents vaccination rates for each county. Here we can see that the largest cluster of counties with low vaccination rates is in Texas and takes up most of the states surface area. 
+
+```{r}
+
+
+practice <- plot_usmap(regions = "counties") + 
+  labs(title = "US Counties",
+       subtitle = "This is a blank map of the counties of the United States.") + 
+  theme(panel.background = element_rect(color = "black", fill = "lightblue"))
+
+#here we see that the countypop is a built in dataset within R. we use this below to merge with our dataset.
+map <- merge(countypop, complete)
+
+#then we use this new dataset to plot
+mapplot <- plot_usmap(data = map, values = "pct_vax") +
+  scale_fill_continuous(name = "Percent Vaccinated", label = scales::comma, type = "viridis") + theme(legend.position = "right")
+
+#adding a title and theme adjustment
+mapplot + ggtitle("Map of US County Vaccination Rates for Residents Age 12+ by 09/29/2021") +
+  theme(panel.background = element_rect(color = "black", fill = "white")) 
+
+#I think this figure might end up in the final paper so I am going to save it as a PNG...
+figure_file = here("results","resultfigure2.png")
+ggsave(filename = figure_file, plot=mapplot)
+
+
+```
+
+
+

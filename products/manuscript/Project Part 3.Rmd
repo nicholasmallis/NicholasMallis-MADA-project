@@ -5,14 +5,14 @@ date: "10/25/2021"
 output: html_document
 ---
 
-##Introduction
+## Introduction
 
 Low COVID-19 vaccination uptake continues to be an issue in battling the pandemic in the United States and througout the world. Studies have explored charactersitics of those individuals who decide not to be vaccinated. Several sources have reported the relationship between education level and COVID-19 vaccination the individual level using data from surveys and qualitative research. KHN released a report on June 11 that outlines the profile of the unvaccinated. They state that “compared to those who have received a covid-19 vaccine, unvaccinated adults are younger, less educated, more likely to be republicans, people of color, and uninsured.” Although this has been examined using surveys from individual participants on a smaller scale, there are no current reports or published papers that have studied this relationship using aggregate data from all counties in the US. 
 
 The following analysis aims to examine the relationship between education level and vaccination rate (for people over age 12) at the county level for all counties in the 50 US states. Public data from CDC on vaccination rates by county and other county characteristics that are available through several different sources on the USDA’s Economic Research website were used for the analysis. This analysis could provide more information on the association between education and vaccination rate on a larger scale. 
 
 
-##Methods
+## Methods
 
 The main outcome for this analysis is percent of eligible people (age 12+) in a county that have been fully vaccinated. It was obtained from the CDC’s open-source dataset, "COVID-19 Vaccinations in the United States, County." This dataset “represents all vaccine partners including jurisdictional partner clinics, retail pharmacies, long-term care facilities, dialysis centers, Federal Emergency Management Agency and Health Resources and Services Administration partner sites, and federal entity facilities.” The data represents vaccination percentages up to 09/29/2021.
 
@@ -22,14 +22,14 @@ There are other possible confounders that we are interested in examining includi
 
 In order to explore the possible relationship between education level and vaccination rates at the county level, data was extracted from the several sources mentioned above and then merged together. Most county level data include a Federal Information Processing Standards (FIPS) number.  This variable was used as the ID variable when merging the datasets. After merging the data, cleaning and processing was performed. The data was subset to only include the 50 states and DC. 
 
-##Statistical Analysis 
+## Statistical Analysis 
 
 Medians and interquartile ranges (IQRs) were calculated for the main outcome and other continuous covariates. Frequencies and proportions were calculated for the one categorical variable, locality. The maps package in R was used to geographically plot vaccination rates for each county in the US. We used scatter plots and linear regression overlays to display the linear relationship between county vaccination rate over twelve years of age and each continuous variable.  Stratified boxplots were used to graphically display differences in the outcome with regard to the one categorical variable, locality. 
 
 Simple linear regression models were used to examine the relationship between each covariate and the outcome. We present regression beta coefficients and p-values for each of these crude model estimates. A multivariate regression model was used to calculate adjusted estimates for each covariate and the outcome. Performance statistics were calculated for each regression model. All modeling was performed using the R package, tidymodels.  
 
 
-##Results: Descriptive Statistics 
+## Results: Descriptive Statistics 
 After cleaning the data and subsetting to only counties from the US mainland and Alaska/Hawaii, the sample had 3,141 observations which represent each county. The median (IQR) vaccination rate for those age twelve and older for all US counties by September 29, 20021 was 47.4% (38%-57%). The median (IQR) bachelor’s degree percentage for all US counties was 11.8% (9.2%-15.6%).  The median (IQR) unemployment rate was 6.5% (5.2-8),  poverty rate was 13.4% (10.4-17.5), and median household income was 53,341 (46,243-62,059). The medians and IQRs for all continuous variables are displayed in Table 1. Regarding locality, the one categorical variable,  a majority (63%) of counties in the US were classified as non-metro.
 
 Figure 1 displays vaccination rates for each county on the US map. The darker (purple) shading indicates lower vaccination rates closer to 0 and the lighter (yellow) shades indicate higher vaccination rates closer to 100. Here we see a cluster of counties with low vaccination rates in the southwest region, specifically in the state of Texas.
@@ -43,14 +43,14 @@ resulttable=readRDS("../../results/summarytable.rds")
 knitr::kable(resulttable, caption = 'Table 1. Descriptive Statistics for US Counties')
 ```
 
-###Figure 1. Map of US County Vaccination Rates for Residents Age 12+ by 09/29/2021
+### Figure 1. Map of US County Vaccination Rates for Residents Age 12+ by 09/29/2021
 ```{r result, echo=FALSE}
 knitr::include_graphics("../../results/resultfigure2.png")
 ```
 
 
 
-##Results: Simple Linear Regression Models
+## Results: Simple Linear Regression Models
 
 Main Exposure: Education
 The figures and tables below examine the bivariate associations between each predicator and the outcome. Looking at the main exposure, education, we see that a one unit increase in percent of county with bachelor’s degree is associated with 1.02 unit increase in vaccination rate (p< 0.0001). This is displayed graphically in the scatterplot and linear regression overlay in figure 2. Table 3 shows the performance statistics on this model. The simple model had an r-squared value of 0.12 and an AIC of 26673.85.
@@ -58,7 +58,7 @@ The figures and tables below examine the bivariate associations between each pre
 Simple Models with Covariates
 A one unit increase in county median income is associated with a slight increase (0.0004) in vaccination rate (p< 0.0001). This is displayed graphically in the scatterplot and linear regression overlay in figure 3. Regarding poverty rate, we see that a one unit increase in poverty rate is associated with a .78 decrease in vaccination rate (p< 0.0001). This is displayed graphically in the scatterplot and linear regression overlay in figure 4. A one unit increase in unemployment rate is associated with a 0.86 decrease in vaccination rate (p< 0.0001). This is displayed graphically in the scatterplot and linear regression overlay in figure 5. The mean vaccination rate is 7.5 percentage points units lower in non-metro areas compared with metro areas (p< 0.0001). This is displayed graphically in the stratified boxplots in figure 6.
 
-##Simple Linear Regression Models
+## Simple Linear Regression Models
 
 Figure 2. Scatterplot and linear regression overlay with percent of county with bachelors degree as the predictor and percent of county vaccinated as the outcome
 ```{r resultfigure1, echo=FALSE}
@@ -144,11 +144,11 @@ knitr::kable(resulttable8, caption = 'Table 7. Results of the simple linear regr
 
 
 
-##Results: Multivariate Regression Model
+## Results: Multivariate Regression Model
 Table 8 below displays the results to the multivariate regression model.  When controlling for other covariates, a one unit increase in percent of county with a bachelor’s degree was associated with 0.82 unit increase in vaccination rate (p< 0.0001). Table 9 shows the performance statistics on the multivariate regression model with all predictors. Here we see that the r-squared value was 0.16 and the AIC was 26534.57. The multivariate model had a higher r-squared value and a lower AIC compared witht the simple model, indicating that it might be a better fit, but model improvements will be made in the next steps to assure that we are using the best model.  
 
 
-##Multivariate Linear Regression Model
+## Multivariate Linear Regression Model
 
 ```{r lm_fit_table3,  echo=FALSE}
 resulttable3=readRDS("../../results/lm_fit_table2.rds")
