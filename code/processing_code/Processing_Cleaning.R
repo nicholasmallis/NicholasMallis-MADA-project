@@ -2,33 +2,18 @@
 
 # Packages
 
-#the following code loads different packages and also installs them as needed
-#if they aren't already installed
-mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
+#the following code loads different packages 
+library(readr)
+library(plyr)
+library(dplyr)
+library(here)
+library(tidyverse)
+library(gridExtra)
+library(tidyr)
+library(robustbase)
+library(usmap)
+library(ggplot2)
 
-for (p in mypackages){
-  if(!require(p, character.only = TRUE)){
-    install.packages(p)
-    library(p, character.only = TRUE)
-  }
-}
-
-
-###############################
-#processing script
-#this script loads the raw data, processes and cleans it 
-#and saves it as Rds file in the processed_data folder
-
-#the following code loads different packages and also installs them as needed
-#if they aren't already installed
-mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
-
-for (p in mypackages){
-  if(!require(p, character.only = TRUE)){
-    install.packages(p)
-    library(p, character.only = TRUE)
-  }
-}
 
 
 
@@ -104,11 +89,12 @@ glimpse(vax)
 
 #now let's look at the data on the main exposure
 glimpse(ed)
-#commenting this out for ease of reading RMD 
 
-#subsetting what we need
-myvars2 <- c("FIPS.Code", "Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990")
-ed <- ed[myvars2]
+#subsetting what we need*** THIS WAS PRODUCING ERRORS ON DR. HANDEL'S END SO I REDID IT WITH DPLYR
+#myvars2 <- c("FIPS.Code", "Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990")
+#ed <- ed[myvars2]
+
+ed <- ed %>% select(FIPS.Code,Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990)
 
 #print(ed) I comment this out to make the document shorter
 

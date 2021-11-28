@@ -354,16 +354,17 @@ pre code {
 
 
 <p>Loading packages and then importing processed data</p>
-<pre class="r"><code>#the following code loads different packages and also installs them as needed
-#if they aren&#39;t already installed
-mypackages&lt;-c(&quot;readr&quot;, &quot;plyr&quot;, &quot;dplyr&quot;, &quot;here&quot;, &quot;tidyverse&quot;, &quot;gridExtra&quot;, &quot;tidyr&quot;, &quot;gridExtra&quot;, &quot;robustbase&quot;, &quot;usmap&quot;, &quot;ggplot2&quot; )
-
-for (p in mypackages){
-  if(!require(p, character.only = TRUE)){
-    install.packages(p)
-    library(p, character.only = TRUE)
-  }
-}
+<pre class="r"><code>#the following code loads different packages 
+library(readr)
+library(plyr)
+library(dplyr)
+library(here)
+library(tidyverse)
+library(gridExtra)
+library(tidyr)
+library(robustbase)
+library(usmap)
+library(ggplot2)
 
 
 # setting path

@@ -1,6 +1,7 @@
 
 #loading packages
 library(broom)
+library(vip)
 library(here) #for data loading/saving
 library(tidyverse)
 library(recipes)
@@ -264,7 +265,6 @@ lasso_pred <- predict(best_lasso_fit, train_data)
 
 x <- best_lasso_fit$fit$fit$fit
 
-quartz()
 LASSO_tune_plot <- plot(x, "lambda")
 LASSO_tune_plot
 
@@ -377,7 +377,7 @@ tree_perfomance <- tree_tune_res %>% show_best(n = 1)
 #The mean RMSE from the Tree Model was 12.7, which is higher than the LASSO.
 print(tree_perfomance)
 
-library(vip)
+
 
 # Based on the plot, pct_bachelors is the most important variable, 
 # followed by unemployment, pct_poverty, and locality
@@ -555,7 +555,7 @@ print(RMSE_null_train)
 
 # LOCALITY
 
-# Here I create a  recipe for the simple model fit with only poverty
+# Here I create a  recipe for the simple model fit with only locality
 fit_recipe_locality <- recipe(pct_vax ~ locality , data = train_data) %>% 
   step_dummy(locality)
 
@@ -653,7 +653,7 @@ print(test_performance1)
 test_predictions1 <- final_fit1 %>% collect_predictions()
 
 
-quartz()
+
 #predicted versus observed
 plot(test_predictions1$.pred,test_data$pct_vax, xlim =c(0,100), ylim=c(0,100), xlab="Predicted", ylab="Observed", 
      main= "Predicted vs Observed from Simple Model on Test Data")

@@ -1,3 +1,11 @@
+---
+title: "Modeling"
+author: "Nicholas Mallis"
+date: "11/28/2021"
+output: html_document
+---
+
+```{r}
 # MODELING SCRIPT
 
 #loading packages
@@ -35,22 +43,26 @@ lm_fit
 lm_fit_table <- tidy(lm_fit)
 
 # saved it as a file
-summarytable_file = here("results", "lm_fit_table.rds")
-saveRDS(lm_fit_table, file = summarytable_file)
+lm1= here::here("results", "lm_fit_table.rds")
+saveRDS(lm_fit_table, file = lm1)
+
+
 
 # using glance to get statistics
 lm_fit_stats <- glance(lm_fit)
 
 
 # saved it as a file
-summarytable_file2 = here("results", "lm_fit_stats.rds")
-saveRDS(lm_fit_stats, file = summarytable_file2)
-
-
+lm1stat = here::here("results", "lm_fit_stats.rds")
+saveRDS(lm_fit_stats, file = lm1stat)
 
 summary(lm(data = data, pct_vax ~ pct_bachelors))
+```
 
-# Now we run another model with all predictors
+
+Now we run another model with all predictors
+```{r}
+
 
 lm_fit2 <- 
   lm_mod %>% 
@@ -61,7 +73,7 @@ lm_fit2
 lm_fit_table2 <- tidy(lm_fit2)
 
 # saved it as a file
-summarytable_file3 = here("results", "lm_fit_table2.rds")
+summarytable_file3 = here::here("results", "lm_fit_table2.rds")
 saveRDS(lm_fit_table2, file = summarytable_file3)
 
 # using glance to get statistics
@@ -69,12 +81,17 @@ lm_fit_stats2 <- glance(lm_fit2)
 
 
 # saved it as a file
-summarytable_file4 = here("results", "lm_fit_stats2.rds")
+summarytable_file4 = here::here("results", "lm_fit_stats2.rds")
 saveRDS(lm_fit_stats2, file = summarytable_file4)
 
 
+```
 
-# other simple models with each predictor and outcome
+Other simple models with each predictor and outcome
+
+```{r}
+
+
 
 # MEDIAN INCOME
 # running model
@@ -87,7 +104,7 @@ lm_fit_median
 lm_fit_median_table <- tidy(lm_fit_median)
 
 # saved it as a file
-summarytable_file4 = here("results", "lm_fit_median.rds")
+summarytable_file4 = here::here("results", "lm_fit_median.rds")
 saveRDS(lm_fit_median_table, file = summarytable_file4)
 
 
@@ -103,7 +120,7 @@ lm_fit_poverty
 lm_fit_poverty_table <- tidy(lm_fit_poverty)
 
 # saved it as a file
-summarytable_file5 = here("results", "lm_fit_poverty.rds")
+summarytable_file5 = here::here("results", "lm_fit_poverty.rds")
 saveRDS(lm_fit_poverty_table, file = summarytable_file5)
 
 
@@ -119,7 +136,7 @@ lm_fit_unemployment
 lm_fit_unemployment_table <- tidy(lm_fit_unemployment)
 
 # saved it as a file
-summarytable_file6 = here("results", "lm_fit_unemployment.rds")
+summarytable_file6 = here::here("results", "lm_fit_unemployment.rds")
 saveRDS(lm_fit_unemployment_table, file = summarytable_file6)
 
 
@@ -135,8 +152,9 @@ lm_fit_locality
 lm_fit_locality_table <- tidy(lm_fit_locality)
 
 # saved it as a file
-summarytable_file7 = here("results", "lm_fit_locality.rds")
+summarytable_file7 = here::here("results", "lm_fit_locality.rds")
 saveRDS(lm_fit_locality_table, file = summarytable_file7)
 
 
+```
 

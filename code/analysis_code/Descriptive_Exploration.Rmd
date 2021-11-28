@@ -8,16 +8,17 @@ output: html_document
 
 Loading packages and then importing processed data
 ```{r message=FALSE}
-#the following code loads different packages and also installs them as needed
-#if they aren't already installed
-mypackages<-c("readr", "plyr", "dplyr", "here", "tidyverse", "gridExtra", "tidyr", "gridExtra", "robustbase", "usmap", "ggplot2" )
-
-for (p in mypackages){
-  if(!require(p, character.only = TRUE)){
-    install.packages(p)
-    library(p, character.only = TRUE)
-  }
-}
+#the following code loads different packages 
+library(readr)
+library(plyr)
+library(dplyr)
+library(here)
+library(tidyverse)
+library(gridExtra)
+library(tidyr)
+library(robustbase)
+library(usmap)
+library(ggplot2)
 
 
 # setting path
