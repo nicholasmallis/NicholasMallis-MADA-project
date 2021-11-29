@@ -12,7 +12,7 @@ HERE ARE THE STEPS TO REPRODUCE MY ANALYSIS
 
 3) Run the Modeling_Simple.Rmd located in the analysis_code folder. This runs simple and multivariate models on the data and saves different tables needed for the manuscript.
 
-4) Run the Modeling_Advanced.R located in the analysis_code folder. full analysis trying several different models (simple, multivariate, LASSO, decision tree) and saves different plots and tables needed for the manuscript.
+4) Run the Modeling_Advanced.R located in the analysis_code folder. This runs the full analysis trying several different models (simple, multivariate, LASSO, decision tree) and saves different plots and tables needed for the manuscript.
 
 5) Run the Final_Draft.Rmd located in the products-> manuscript folder. Knitting this document will produce my submission for this part of the project. It now includes references that were imported from Endnote. The reference file is located in the manuscript tab and named bibliography.bibtex. Supplemental_Material.Rmd contains plots and tables mentioned in the main text, but not included. 
 
