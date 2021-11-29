@@ -45,6 +45,8 @@ After cleaning the data and subsetting to only counties from the US mainland and
 Figure 1 displays vaccination rates for each county on the US map. The darker (purple) shading indicates lower vaccination rates closer to 0 and the lighter (yellow) shades indicate higher vaccination rates closer to 100. Here we see a cluster of counties with low vaccination rates in the southeast, specifically in the state of Georgia.There are also several counties with missing data on vaccination rate in the north west, specifically in the state of Idaho. Figure 2 displays the scatter plot of percent of county with a bachelors degree or higher and percent vaccination rate over 12 years old. From this exploratory figure, we can see the appearance of possible linear trend. This is displayed by the regression overlay. Figure 3 displays a stratified boxplot of vaccination rate by metro and non-metro counties. Counties identified as metro have a higher median vaccination rate at 57.9 compared with non-metro counties at 49.5. Descriptive plots to all of the other continuous variables were not included in this text, but available in the the supplemental materials. 
 
 
+
+
 <div style="margin-bottom:50px;">
 </div>
 
@@ -65,6 +67,7 @@ knitr::include_graphics("../../results/resultfigure2.png")
 
 <div style="margin-bottom:50px;">
 </div>
+
 
 
 

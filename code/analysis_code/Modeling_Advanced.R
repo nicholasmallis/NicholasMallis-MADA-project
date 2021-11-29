@@ -283,6 +283,25 @@ ggsave(filename = f, plot= LASSO_tune_plot)
 LASSO_vars <- tidy(extract_fit_parsnip(best_lasso_fit)) %>% filter(estimate != 0)
 LASSO_vars
 
+LASSO_table <- as.data.frame(LASSO_vars)
+LASSO_table[2,1] <- "Percent Bachelor's Degree"
+LASSO_table[3,1] <- "Unemployment Rate"
+LASSO_table[4,1] <- "Poverty Rate"
+LASSO_table[5,1] <- "Locality (Non-Metro vs Metro)"
+
+names(LASSO_table)[1] <- "Term"
+names(LASSO_table)[2] <- "Estimate"
+names(LASSO_table)[3] <- "Penalty"
+
+LASSO_table
+
+
+
+# saved it as a file
+LASSO_tab = here::here("results", "LASSO_table.rds")
+saveRDS(LASSO_table, file = LASSO_tab)
+
+
 #Plotting observed/predicted and residuals.
 #predicted versus observed
 LASSO_predicted_vs_observed <- plot(lasso_pred$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100))

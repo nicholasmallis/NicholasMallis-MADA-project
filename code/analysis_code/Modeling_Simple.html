@@ -393,7 +393,7 @@ library(here)</code></pre>
 ## x dplyr::lag()      masks stats::lag()
 ## x yardstick::spec() masks readr::spec()
 ## x recipes::step()   masks stats::step()
-## • Use tidymodels_prefer() to resolve common conflicts.</code></pre>
+## • Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
 <pre class="r"><code>library(workflowr) </code></pre>
 <pre><code>## This is workflowr version 1.6.2
 ## Run ?workflowr for help getting started</code></pre>
@@ -433,7 +433,7 @@ lm_fit &lt;-
 lm_fit</code></pre>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  5ms 
+## Fit time:  4ms 
 ## 
 ## Call:
 ## stats::lm(formula = pct_vax ~ pct_bachelors, data = data)
@@ -569,7 +569,7 @@ lm_fit_unemployment &lt;-
 lm_fit_unemployment</code></pre>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  2ms 
+## Fit time:  4ms 
 ## 
 ## Call:
 ## stats::lm(formula = pct_vax ~ unemployment, data = data)

@@ -144,7 +144,7 @@ The table below summarizes the median and interquartile range for each continous
 print(table)
 
 #this table will likely end up in the final paper so saved it as a file
-summarytable_file = here("results", "summarytable.rds")
+summarytable_file = here::here("results", "summarytable.rds")
 saveRDS(table, file = summarytable_file)
 ```
 
@@ -175,7 +175,7 @@ g
 ```
 
 #Further Exploratory Analysis: Main Research Question 
-In the next section, I present scatterplots with linear regression overlays to visualize possible univariate associations between the continuous predictors and outcome. I also present a strafied boxplot by our one categorical predictor, locality. First, I plot percent with bachelors degree or higher vs percent vaccinated. From the scatterplot, we see that there seems to be a positive association. As county bachelors degree percentages increase, percent vaccinated increases. 
+In the next section, I present scatterplots with linear regression overlays to visualize possible univariate associations between the continuous predictors and outcome. I also present a stratified boxplot by our one categorical predictor, locality. First, I plot percent with bachelors degree or higher vs percent vaccinated. From the scatterplot, we see that there seems to be a positive association. As county bachelors degree percentages increase, percent vaccinated increases. 
 ```{r, warning=FALSE, message=FALSE}
 
 #now let's do a simple scatter plot of our main predictor and outcome to explore the relationship
@@ -185,7 +185,7 @@ p1 <- complete %>% ggplot(aes(x=pct_bachelors, y=pct_vax)) + geom_point(color="r
 print(p1)
 
 #I think this figure might end up in the final paper so I am going to save it as a PNG...
-figure_file = here("results","resultfigure1.png")
+figure_file = here::here("results","resultfigure1.png")
 ggsave(filename = figure_file, plot=p1)
 
 #at first glance, there appears to be a linear relationship between our predictor and outcome,
@@ -212,32 +212,33 @@ p2 <- complete %>% ggplot(aes(x=median_income, y=pct_vax)) + geom_point(color="b
 p2
 
 #I think this figure might end up in the final paper so I am going to save it as a PNG...
-figure_file = here("results","resultfigure_median_income.png")
+figure_file = here::here("results","resultfigure_median_income.png")
 ggsave(filename = figure_file, plot=p2)
 
-p3 <- complete %>% ggplot(aes(x=pct_poverty, y=pct_vax)) + geom_point(color="green", size=.5) + geom_smooth(method='lm', color="black") +   xlim(0, 100) + ylim(0,100) +  coord_fixed() +
+p3 <- complete %>% ggplot(aes(x=pct_poverty, y=pct_vax)) + geom_point(color="green", size=.5) + geom_smooth(method='lm', color="black") + 
   labs(title= "Scatterplot of Percent of County in Poverty vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Percent of County in Poverty") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p3
 
 #I think this figure might end up in the final paper so I am going to save it as a PNG...
-figure_file = here("results","resultfigure_poverty.png")
+figure_file = here::here("results","resultfigure_poverty.png")
 ggsave(filename = figure_file, plot=p3)
 
-p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple", size=.5) + geom_smooth(method='lm', color="black") +   xlim(0, 100) + ylim(0,100) +  coord_fixed() + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in County") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
+p4 <- complete %>% ggplot(aes(x=unemployment, y=pct_vax)) + geom_point(color="purple", size=.5) + geom_smooth(method='lm', color="black") + labs(title= "Scatterplot of Unemployment Rate in County vs Percent Vaccinated", subtitle = ("All Counties, USA")) + xlab("Unemployment Rate in County") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p4
 
 
 #I think this figure might end up in the final paper so I am going to save it as a PNG...
-figure_file = here("results","resultfigure_unemployment.png")
+figure_file = here::here("results","resultfigure_unemployment.png")
 ggsave(filename = figure_file, plot=p4)
 
+#  xlim(0, 100) + ylim(0,100) +  coord_fixed() + 
 
 
 p5 <- ggplot(data=subset(complete, !is.na(locality)), aes(x=locality, y=pct_vax, fill=locality)) + geom_boxplot() + labs(title= "Boxplot of Locality vs Percent Vaccinated", subtitle = ("All Counties, USA")) +  xlab("Locality") +  ylab("Percent of County Vaccinated (12 Years +)") + theme_classic()
 p5
 
 
-figure_file = here("results","resultfigure_locality.png")
+figure_file = here::here("results","resultfigure_locality.png")
 ggsave(filename = figure_file, plot=p5)
 
 
@@ -254,8 +255,6 @@ locality_table <- complete %>%
   summarize(median = round(median(pct_vax, na.rm=TRUE), 1),
             quant25 = round(quantile(pct_vax, probs = q[1], na.rm=TRUE), 1), 
             quant75 = round(quantile(pct_vax, probs = q[2], na.rm= TRUE), 1))
-
-
 
 #i also combine the 25th percentile and 75th into a character string seperated by a "-"
 locality_table$IQR <- paste(locality_table$quant25, locality_table$quant75, sep = "-")
@@ -274,7 +273,7 @@ names(locality_table)[2] <- "Median Vaccination Rate (%)"
 locality_table
 
 #this table might end up in the final paper so saved it as a file
-summarytable_file2 = here("results", "summarytable2.rds")
+summarytable_file2 = here::here("results", "summarytable2.rds")
 saveRDS(locality_table, file = summarytable_file2)
 ```
 
@@ -307,7 +306,7 @@ mapplot + ggtitle("Map of US County Vaccination Rates for Residents Age 12+ by 0
   theme(panel.background = element_rect(color = "black", fill = "white")) 
 
 #I think this figure might end up in the final paper so I am going to save it as a PNG...
-figure_file = here("results","resultfigure2.png")
+figure_file = here::here("results","resultfigure2.png")
 ggsave(filename = figure_file, plot=mapplot)
 
 
