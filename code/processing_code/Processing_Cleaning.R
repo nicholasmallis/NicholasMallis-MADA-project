@@ -59,9 +59,13 @@ myvars <- c("FIPS", "Series_Complete_12PlusPop_Pct","Metro_status", "Recip_Count
 vax <- vax[myvars]
 
 
-#after printing this, we see that the FIPS is a character variable with #some marked as UNK. i'd like to convert this to a numeric variable and get #the unknowns to be NA's. Let's start with the NA's
+#after printing this, we see that the FIPS is a character variable with #some marked as UNK. 
+#let's remove these unknowns
+#vax[which(vax$FIPS != 'UNK'), ]
 
+# i'd like to convert this to a numeric variable and get #the unknowns to be NA's. Let's start with the NA's
 vax$FIPS[vax$FIPS=='UNK'] <- NA
+
 
 #now let's convert to numeric.
 #and while we're at it, we'll go ahead an convert Series_Complete_12PlusPop_Pct to numeric as well
@@ -74,6 +78,9 @@ table(vax$Series_Complete_12PlusPop_Pct==0)
 
 #let's convert those who report vaccination as 0 to unknown
 vax$Series_Complete_12PlusPop_Pct[vax$Series_Complete_12PlusPop_Pct==0] <- NA
+
+vax[which(vax$FIPS=='UNK'), ]
+
 
 #checking. looks good
 head(vax)
@@ -94,16 +101,24 @@ glimpse(ed)
 #myvars2 <- c("FIPS.Code", "Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990")
 #ed <- ed[myvars2]
 
-ed <- ed %>% select(FIPS.Code,Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990)
+#ed <- ed %>% select(FIPS.Code,Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990)
+
+
+ed_new <- select(ed,FIPS.Code,Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990)
+
+
 
 #print(ed) I comment this out to make the document shorter
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
-names(ed)[1] <- "FIPS"
+#names(ed)[1] <- "FIPS"
+
+ed_new <- ed_new %>%
+  rename(FIPS = FIPS.Code)
 
 #checking. looks good
-glimpse(ed)
-head(ed)
+glimpse(ed_new)
+head(ed_new)
 
 
 
@@ -113,15 +128,22 @@ head(ed)
 glimpse(unemployment)
 
 #subsetting what we need
-myvars3 <- c("FIPS_Code", "Unemployment_rate_2020", "Median_Household_Income_2019" )
-unemployment <- unemployment[myvars3]
+#myvars3 <- c("FIPS_Code", "Unemployment_rate_2020", "Median_Household_Income_2019" )
+#unemployment <- unemployment[myvars3]
+
+unemployment_new <- select(unemployment,FIPS_Code, Unemployment_rate_2020, Median_Household_Income_2019)
+
+
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
-names(unemployment)[1] <- "FIPS"
+#names(unemployment)[1] <- "FIPS"
+
+unemployment_new <- unemployment_new %>%
+  rename(FIPS = FIPS_Code)
 
 #checking
-glimpse(unemployment)
-head(unemployment)
+glimpse(unemployment_new)
+head(unemployment_new)
 
 
 
@@ -130,16 +152,24 @@ head(unemployment)
 # We want PCTPOVALL_2019 which is the
 # Estimated percent of people of all ages in poverty 2019
 
-#subsetting what we need
-myvars4 <- c("FIPStxt", "PCTPOVALL_2019" )
-poverty <- poverty[myvars4]
+# subsetting what we need
+# myvars4 <- c("FIPStxt", "PCTPOVALL_2019" )
+# poverty <- poverty[myvars4]
+
+poverty_new <- select(poverty,FIPStxt, PCTPOVALL_2019)
+
+
 
 #since we'll be merging in FIPS, let's go ahead and change the var name "FIPS.Code"
-names(poverty)[1] <- "FIPS"
+#names(poverty)[1] <- "FIPS"
+
+poverty_new <- poverty_new %>%
+  rename(FIPS = FIPStxt)
+
 
 #checking
-glimpse(poverty)
-head(poverty)
+glimpse(poverty_new)
+head(poverty_new)
 
 
 
@@ -152,14 +182,18 @@ head(poverty)
 
 #There ended up being some possible problems with what I ran above so I do it again below in several steps
 
-complete1 <- merge(vax, ed)
 
-glimpse(complete1)
 
-complete2 <- merge(unemployment, poverty)
-glimpse(complete2)
+complete <- left_join(vax, ed_new) %>% left_join(unemployment_new) %>% left_join(poverty_new)
 
-complete <- merge(complete1, complete2)
+#complete1 <- merge(vax, ed_new)
+
+#glimpse(complete1)
+
+#complete2 <- merge(unemployment, poverty)
+#glimpse(complete2)
+
+#complete <- merge(complete1, complete2)
 
 #checking. looks good!
 glimpse(complete)
@@ -203,14 +237,25 @@ table(complete$Recip_State)
 
 
 #before we continue, i really need to change some of these variable names. they are just too long!
-names(complete)[2] <- "pct_vax"
-names(complete)[3] <- "locality"
-names(complete)[4] <- "county"
-names(complete)[5] <- "state"
-names(complete)[6] <- "pct_bachelors"
-names(complete)[7] <- "unemployment"
-names(complete)[8] <- "median_income"
-names(complete)[9] <- "pct_poverty"
+#names(complete)[2] <- "pct_vax"
+#names(complete)[3] <- "locality"
+#names(complete)[4] <- "county"
+#names(complete)[5] <- "state"
+#names(complete)[6] <- "pct_bachelors"
+#names(complete)[7] <- "unemployment"
+#names(complete)[8] <- "median_income"
+#names(complete)[9] <- "pct_poverty"
+
+
+complete <- complete %>%
+  rename(pct_vax = Series_Complete_12PlusPop_Pct,
+         locality = Metro_status,
+         county = Recip_County,
+         state = Recip_State,
+         pct_bachelors = Percent.of.adults.with.a.bachelor.s.degree.or.higher..1990,
+         unemployment = Unemployment_rate_2020,
+         median_income = Median_Household_Income_2019,
+         pct_poverty = PCTPOVALL_2019)
 
 #checking. looks good!
 glimpse(complete)
