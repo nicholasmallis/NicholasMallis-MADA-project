@@ -1,0 +1,113 @@
+---
+title: Project Review Template 
+date: "`r file.mtime(knitr::current_input())`"
+#bibliography: ../media/references.bib
+output: 
+  html_document:
+    toc_depth: 3
+    number_sections: true
+---
+
+#Overview
+Title of project: 
+
+Name of project author(s): Nicholas Miller
+
+Name of project reviewer: Gabriella Veytsel
+
+# Specific project content evaluation
+**Background, Context and Motivation**
+I think your introduction could benefit from a bit more context and background on the vaccine, pandemic, and vaccination trends/hesitancy. I would definitely include some statistics and literature review here. You only have one sentence on motivation, so I think that you could add a bit more to drive your point home.
+
+**Summary assessment**
+* some contextualization and motivation
+
+**Question description**
+Your question is clear, for sure!
+
+**Summary assessment**
+* question/hypotheses fully clear
+
+**Data description**
+You could have a subheader for data. I think you describe your data pretty well, I'm not really sure what else there is to add.
+
+**Summary assessment**
+* source and overall structure of data well explained
+
+**Data wrangling and exploratory analysis**
+My comments for data wrangling are mixed with reproducibility. As far as exploratory analysis, it looks good to me! Looks like you visualized the distribution of your variables and did descriptive statistics. Your scatterplots looks nice. I had similar scatterplots for my county analysis with predictor (%) on the x-axis and percent of county infected on the y. Maybe you could add the r-square and/or regression line equation to your scatterplots (code below)? 
+
+stat_regline_equation(label.y = 30, aes(label = ..eq.label..)) +
+stat_regline_equation(label.y = 25, aes(label = ..rr.label..))
+
+Your map looks great!! I always have a hard time with positioning/scaling Alaska and Hawaii, myself. You can make it interactive if you wanted with leaflet. 
+
+**Summary assessment**
+* essentially no weaknesses in wrangling and exploratory component
+
+**Appropriateness of Analysis**
+Your linear regression models and machine learning methods are what I'd expect after this class! It looks like you're missing some diagnostic plots in your supplementary file on the training data (that you do present for the final model)--those plots should have gone into your decision-making when selecting a final model, so I would include them. You use several models and evaluate and compare them to each other and the null model, as expected.
+
+**Summary assessment**
+* strong and reasonable analysis
+
+**Presentation**
+You have a detailed explanation and interpretation of your methods. I see you report the estimates for your lasso predictors--I was wondering about that myself, like it seems uninformative without confidence intervals (which I tried and cannot get, I don't know about you). I like the way you go through the model and results, it's very clear. 
+
+**Summary assessment**
+* results are very well presented
+
+**Discussion/Conclusions**
+I think your limitations are reasonable and its good that your model results models all support the same conclusion that education is the most important variable here. I would probably some more limitations, for example you could have probably boosted model performance by adding more variables, and go into hypotheses for why education was so important. 
+
+**Summary assessment**
+* results are presented ok, with room for improvement
+
+#Overall project content evaluation
+
+**Structure**
+I like that you have a brief summary of your project in your readme. I think the readmes in each folder could probably be more thorough (something I should do myself), but your organization makes sense to me!
+
+**Summary assessment**
+* well structured
+
+**Documentation**
+You could comment in your code at the beginning like a summary of what you're doing and expected outputs, plus add comments for the packages you're using. For your analysis code, especially, I'd expect a little more information up front on what you're doing, so I know which models you're going to try (even though it's in your readme). 
+
+**Summary assessment**
+* decently documented with some gaps
+
+**Reproducibility**
+According to your readme, you edited somethings in Excel, but I'm not sure what you've changed (and maybe you can do these things in R instead?)
+
+Error on lines 97 and 135--undefined columns selected. 
+
+I really don't think you should be renaming variables by their column--for reprducibility, that can really mess with things, rename by old variable name. When you sent me a screenshot of your "complete" dataset, you only had 9 columns, my column names will come out wrong since the errors affected subsetting.
+
+I wasn't able to reproduce the processingscript.r, since the dataset "complete" didn't merge properly and due to the above errors. 
+
+Locality's FIPS variable needs to be cleaned from ("I..FIPS" to "FIPS") for merging.
+
+You said you got the expected results, but I got only one row for DC due to a merging issue with FIPS. I looked into it and figured you'd want to leftjoin the 4 datasets to your vax dataset. It looks like FIPS is the key for vax, ed, unemployment, and locality.
+
+Don't you want to drop unknown counties from your vax dataset? 
+
+I did this to merge to get 3224 obs, but you had less than me even though I removed missing counties.
+
+complete <- left_join(vax, ed) %>%
+  left_join(unemployment) %>%
+  left_join(locality) %>%
+  left_join(poverty)
+  
+I don't mean to criticize! It's possible that it's just me. This is all this to say that I'm sorry I won't be able to reproduce anything after the first script and I'll have to move on to evaluating via HTML products. Except modeling_advanced is an R script, so I won't be able to follow along as well (but I'll look at your output except in the manuscript and supplementary figures).
+
+I think your readme instructions for executing the scripts look good though!!
+
+**Summary assessment**
+* major parts not reproducible
+
+**Thoroughness**
+Everything I'd expect! You used different models, really thorough explanation and interpretation of model steps and results. I think this was really great--I hope my comments help, there's only really a few small things that I noted! Great job, Nicholas!!
+
+**Summary assessment**
+* strong level of thorougness
