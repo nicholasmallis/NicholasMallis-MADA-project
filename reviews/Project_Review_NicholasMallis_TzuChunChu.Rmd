@@ -1,0 +1,140 @@
+
+---
+output:
+  html_document: default
+---
+
+
+# Overview
+
+Title of project: Education and COVID-19 County Vaccination Rate
+
+Name of project author(s): Nicholas Mallis
+
+Name of project reviewer: Tzu-Chun Chu
+
+
+
+# Specific project content evaluation
+Evaluate the different parts of the project by filling in the sections below.
+
+
+## Background, Context and Motivation
+Author has addressed the pressing issue of low vaccination coverage globally and potential disparity in characteristics of unvaccinated population. Three articles were cited as references that assessed the pattern and determinants of willingness toward vaccination, which raised the question and need for further research on exploring the relationship between education and vaccination rate across different geographical locations. Reporting current overall vaccination coverage and these statistics stratified by population characteristics in the U.S. would strengthen this part and provides readers the magnitude of the differences, for example, the measure of association for vaccination by age, race, and education.
+
+CDC website, [COVID data Tracker](https://covid.cdc.gov/covid-data-tracker/#vaccinations_vacc-total-admin-rate-total) is another great resource that provides daily update on COVID-19 vaccinations across each state. It might be interesting to mention in the background section to look further into whether there is heterogeneity in this association between education and vaccination rate across state. Overall, I think the author raised the important question, and additional statistics from previous literature will help to contextualize the lack of evidences in this area.    
+
+
+### Summary assessment
+* some contextualization and motivation
+
+
+## Question description
+The question is well-addressed. 
+
+
+### Summary assessment
+* question/hypotheses fully clear
+
+
+## Data description
+Description of study variables and how they were estimated or defined were written in detail. In addition, inclusion and exclusion criteria were also well-stated. No codebook or ther meta dataset were provided. 
+
+
+### Summary assessment
+* source and overall structure of data well explained
+
+
+## Data wrangling and exploratory analysis
+
+I can run the Processing_Cleaning.R script without any issue. I can follow and understand why each step of data cleaning and preprocessing took place, but the script looks somewhat tedious and several dyplyr function with pipeline workflow will help to clean up this process (see *Reproducibility* part below for example code). Using dplyr functions can combine several lines of codes in current script to just one and avoids potential mistakes. As far as the data exploratory analysis, it certainly looks like a lot of efforts have been made, and each step were documented in detail. The same results and figures were easy to reproduce. I really like the map of county vaccination rate you presented!  
+
+
+### Summary assessment
+* essentially no weaknesses in wrangling and exploratory component
+
+
+## Appropriateness of Analysis
+
+Both simple and full linear regression models were analyzed, which are appropriate for continuous outcome. More complex, machine learning approaches, LASSO regularization regression model and decision tee were further fitted to the dataset, but these two analyses were not described in the statistical analysis section of the manuscript. I like that you looked into the correlation between each predictor and took out the income variable. What I would suggest is to do that when fitting simple and full linear models since that's where the collinearity causes problem that makes model unstable. On the other hand, the collinearity is less of a concern for prediction models, since we just want to do our best to get better predictions with a set of predictors and care less about drawing conclusion from these predictors. Also, you might want to run all models on the same set of predictors so they are comparable. Just one other suggestion (I know that we were given limited time to complete this project with all other things going on in a semester, and I had hard time keep up documenting each steps in my project as well), a brief summary of what analyses you were going to perform at the top of each analysis scripts will help to navigate others better.  
+
+I saw that you also ran a couple of linear models on train data with just one predictor at a time in the Modeling_Advanced.R script. You can also fit a full linear regression model, put all of their RMSE values and present them with results from LASSO/decision tree to compare all of their performance together in a table. It will also be a good idea to save all the diagnostic plots so you don't need to rerun the analyses every time.     
+
+
+### Summary assessment
+* strong and reasonable analysis
+
+## Presentation
+
+Results for descriptive analyses and model fitting were well-written, and easy to follow. Each table and figure were referred in the context with detailed explanation and description. Final decision tree algorithm could be useful to report as well. Some plots such as LASSO plots of model performance and VIP for decision were a bit blurry, and the axis labels need to be bigger. THe final draft should be knitted to word document since that will be the format to submit to journal if you would like to publish your research results. You might want to check out the flextable package for nice framework for creating published-ready tables! 
+
+### Summary assessment
+* results are very well presented
+
+
+## Discussion/Conclusions
+
+I think the final model including only education also didn't fit well, since the R squared was only 22%, indicating that most of the variances in the data were not explained by this predictor. Also, the dots were not aligned well on the diagonal line on the predicted vs observed plot. Overall, I think this is just one of the drawback of aggregated level data, levels of the data were aggregated (e.g. you might actually see a trend between different levels of education, but this effect was masked due to dichotomizing data to only binary). 
+Other variables might be contributing to the vaccination rate and can be explored such as age, political preference, race and rural/urban areas, but I understand that some of these variables might be difficult to retrieve in aggregated scale. I think you pointed out some important limitations since some of the measurements can change over time, and we should all be careful when interpreting them.   
+
+
+### Summary assessment
+* minor parts wrong, missing or unclear
+
+
+## Further comments
+
+_Add any other comments regarding the different aspects of the project here. Write anything you think can help your classmate improve their project._
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+
+I think overall you did a great job organizing all the scripts and documents, and only final projects were saved in the main folder.  
+
+
+### Summary assessment
+* well structured
+
+
+## Documentation 
+
+I think you did a great job adding comments on each of your script to walk us through your work, and reason why you performed certain data processing or analysis. As mentioned above, a brief summary at the top of each script could be helpful.
+
+
+### Summary assessment
+* fully and well documented
+
+
+## Reproducibility
+I was able to reproduce most of your work with some minor fix, so I'm not sure if it's just me running into this problem. For some reason, when I imported some of the csv files, the first column name ended up as "ï..FIPS.Code" instead of "FIPS.Code" for "Education", "Poverty Estimates" and "Unemployment". After I made some changes for that, the script ran without any problem. In the Modeling_advanced.R script, line 349, tree_tune_res %>% autoplot() was called before getting the tuning parameter of the tree. Other scripts ran fine without any problem. 
+
+
+I don't want to make any change to your script, just to avoid any merging conflict. Hence, I added my example codes here about data cleaning using dplyr functions here,
+
+vax <-
+	vax %>%
+	mutate(FIPS = na_if(FIPS, "UNK"),
+				 FIPS = as.numeric(FIPS),
+				 Series_Complete_12PlusPop_Pct = as.numeric(Series_Complete_12PlusPop_Pct),
+				 Series_Complete_12PlusPop_Pct = na_if(Series_Complete_12PlusPop_Pct, 0))
+				 
+This is an alternative using dplyr that processed 4 lines of code at once (line 67-80) in the Processing_Cleaning.R script. 
+
+
+### Summary assessment
+* small parts not reproducible or required manual intervention 
+
+
+## Thoroughness
+
+I think this is a well-thought-out study. You first conducted a thorough exploratory data analysis along with the Univariate analysis to assess the association between each predictor with the outcome. Then, you used a couple different approaches from simple linear regression model to complex and powerful ML approaches, and eventually compare their performance to finalize with a best fitted model. Furthermore, you organized your README file really well, and provided very clear instruction about how to reproduce your work (I definitely need ti do a better job at that!). Hope some of these feedback are helpful and keep up with the great work!!
+
+
+### Summary assessment
+* strong level of thorougness
+
+
+
