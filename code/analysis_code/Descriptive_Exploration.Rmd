@@ -47,10 +47,19 @@ fivenum(complete$pct_poverty)
 table(complete$locality)
 prop.table(table(complete$locality))
 
-#now let's explore what percent of each variable is missing
-colMeans(is.na(complete))
+#now let's explore how many and what percent of each variable is missing
+Missing <- sapply(complete, function(x) sum(is.na(x)))
+Missing
+
+Percent <- 100 * round(colMeans(is.na(complete)), 4)
+Percent
 
 
+Table_Missing <- cbind(Missing, Percent)
+
+#this table will likely end up in the final paper so saved it as a file
+missing = here::here("results", "missing.rds")
+saveRDS(Table_Missing, file = missing)
 
 ```
 
@@ -61,8 +70,13 @@ The figure below is a histogram of the outcome variable, percent vaccinated in e
 
 
 #here we do % vaccinated
-a <- complete %>% ggplot(aes(x=pct_vax)) + geom_histogram(fill="red", binwidth = 5.) + labs(title= "Histogram of Percent Vaccinated by County (USA, 09/29/2021)") + xlab("Histogram of Percent Vaccinated by County") +  ylab("Count") + theme_classic()
+a <- complete %>% ggplot(aes(x=pct_vax)) + geom_histogram(fill="red", binwidth = 5.) + labs(title= "Histogram of Percent Vaccinated by County (USA, 11/10/2021)") + xlab("Histogram of Percent Vaccinated by County") +  ylab("Count") + theme_classic()
 a
+
+vax_hist = here::here("results","vax_hist.png")
+ggsave(filename = vax_hist, plot=a)
+
+
 ```
 
 ##Histogram of Main Predictor: Percent With Bachelors Degree
@@ -71,6 +85,10 @@ The figure below is a histogram of the main predictor variable, percent with a b
 #here we do % bachelors
 b <- complete %>% ggplot(aes(x=pct_bachelors)) + geom_histogram(fill="blue", binwidth = 5) + xlim(0, 75) + labs(title= "Histogram of Percent with Bachelors Degree by County (USA)") + xlab("Histogram of Percent with Bachelors by County") +  ylab("Count") + theme_classic() 
 b
+
+bach_hist = here::here("results","bach_hist.png")
+ggsave(filename = bach_hist, plot=b)
+
 ```
 
 
@@ -83,13 +101,24 @@ Here we can see that the other continuous variables do not appear to be normally
 c <- complete %>% ggplot(aes(x=unemployment)) + geom_histogram(fill="green", binwidth = 5) + xlim(0, 75) + labs(title= "Histogram of Unemployment Rate by County (USA)") + xlab("Histogram of Unemployment Rate by County") +  ylab("Count") + theme_classic()
 c
 
+un_hist = here::here("results","un_hist.png")
+ggsave(filename = un_hist, plot=c)
+
+
 #here we do % poverty
 d <- complete %>% ggplot(aes(x=pct_poverty)) + geom_histogram(fill="purple", binwidth = 5) + xlim(0, 75) + labs(title= "Histogram of Poverty Rate by County (USA)") + xlab("Histogram of Poverty Rate by County") +  ylab("Count") + theme_classic()
 d
 
+pov_hist = here::here("results","pov_hist.png")
+ggsave(filename = pov_hist, plot=d)
+
+
 #here we do median income
 e <- complete %>% ggplot(aes(x=median_income)) + geom_histogram(fill= "orange", binwidth = 10000) + labs(title= "Histogram of Median Income by County (USA)") + xlab("Histogram of Median Income by County") +  ylab("Count") + theme_classic()
 e
+
+inc_hist = here::here("results","inc_hist.png")
+ggsave(filename = inc_hist, plot=e)
 
 ```
 

@@ -184,16 +184,16 @@ head(poverty_new)
 
 
 
-complete <- left_join(vax, ed_new) %>% left_join(unemployment_new) %>% left_join(poverty_new)
+#complete <- left_join(vax, ed_new) %>% left_join(unemployment_new) %>% left_join(poverty_new)
 
-#complete1 <- merge(vax, ed_new)
+complete1 <- merge(vax, ed_new)
 
-#glimpse(complete1)
+glimpse(complete1)
 
-#complete2 <- merge(unemployment, poverty)
-#glimpse(complete2)
+complete2 <- merge(unemployment_new, poverty_new)
+glimpse(complete2)
 
-#complete <- merge(complete1, complete2)
+complete <- merge(complete1, complete2)
 
 #checking. looks good!
 glimpse(complete)

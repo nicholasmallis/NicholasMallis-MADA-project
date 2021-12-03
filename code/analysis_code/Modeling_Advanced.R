@@ -60,6 +60,10 @@ correlations <-  mydata[,c(-2)]
 cor_1 <- round(cor(correlations), 2)
 cor_1
 
+correlations = here::here("results", "corr_mat.rds")
+saveRDS(cor_1, file = correlations)
+
+
 #It looks like median income and percent poverty are pretty highly correlated (-0.77)
 #Further, percent bachelors is strongly correlated with median income (0.62)
 
@@ -136,6 +140,21 @@ rmse_train <- vax_aug %>%
   rmse(truth = pct_vax, .pred)
 
 
+jpeg(file = "results/full_pred_vs_obs.jpeg")
+full_predicted_vs_observed <- plot(vax_aug$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
+                                     xlab="Predicted", ylab="Observed", 
+                                     main= "Predicted vs Observed from Full Model on Train Data")
+abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+dev.off()
+
+
+jpeg(file = "results/full_residuals.jpeg")
+#residuals
+full_residuals <- plot(vax_aug$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from Full Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
+
+
 #COMPARING TO NULL MODEL 
 
 #Looks like our model with all predictors does better than the null at reducing
@@ -180,6 +199,23 @@ vax_aug_simple <-
 
 vax_aug_simple %>%
   select(pct_vax)
+
+
+
+jpeg(file = "results/simple_pred_vs_obs.jpeg")
+simple_predicted_vs_observed <- plot(vax_aug_simple$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
+                                    xlab="Predicted", ylab="Observed", 
+                                    main= "Predicted vs Observed from Simple Model on Train Data")
+abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+dev.off()
+
+
+jpeg(file = "results/simple_residuals.jpeg")
+#residuals
+simple_residuals <- plot(vax_aug_simple$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from Simple Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
+
 
 
 # Calculating Root RMSE 
@@ -304,12 +340,20 @@ saveRDS(LASSO_table, file = LASSO_tab)
 
 #Plotting observed/predicted and residuals.
 #predicted versus observed
-LASSO_predicted_vs_observed <- plot(lasso_pred$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100))
+#jpeg(file = "results/LASSO_pred_vs_obs.jpeg")
+jpeg(file = "results/LASSO_pred_vs_obs2.jpeg")
+LASSO_predicted_vs_observed <- plot(lasso_pred$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
+                                    xlab="Predicted", ylab="Observed", 
+                                    main= "Predicted vs Observed from LASSO Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
-#residuals
-LASSO_residuals <- plot(lasso_pred$.pred-train_data$pct_vax)
-abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
 
+
+jpeg(file = "results/LASSO_residuals2.jpeg")
+#residuals
+LASSO_residuals <- plot(lasso_pred$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from LASSO Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
 
 # The diagnostic plots show that this model 
 # isn't much better either. We want the points
@@ -382,14 +426,19 @@ rpart.plot(extract_fit_parsnip(best_tree_fit)$fit)
 
 
 
-
+jpeg(file = "results/DT_pred_vs_obs.jpeg")
 #predicted versus observed
-Tree_predicted_vs_observed <- plot(tree_pred$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100))
+Tree_predicted_vs_observed <- plot(tree_pred$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100),
+                                   xlab="Predicted", ylab="Observed", 
+                                   main= "Predicted vs Observed from Decision Tree Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
-#residuals
-Tree_residuals<- plot(tree_pred$.pred-train_data$pct_vax)
-abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
 
+jpeg(file = "results/DT_resid.jpeg")
+#residuals
+Tree_residuals<- plot(tree_pred$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from Decision Tree Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
 
 tree_perfomance <- tree_tune_res %>% show_best(n = 1)
 
@@ -452,6 +501,22 @@ vax_aug_unemployment %>%
   select(pct_vax)
 
 
+jpeg(file = "results/unemployment_simple_pred_vs_obs.jpeg")
+unemployment_simple_predicted_vs_observed <- plot(vax_aug_unemployment$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
+                                     xlab="Predicted", ylab="Observed", 
+                                     main= "Predicted vs Observed from Unemployment Model on Train Data")
+abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+dev.off()
+
+
+jpeg(file = "results/unemployment_simple_residuals.jpeg")
+#residuals
+simple_residuals <- plot(vax_aug_unemployment$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from Unemployment Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
+
+
+
 # Calculating Root RMSE 
 rmse_train_unemployment <- vax_aug_unemployment %>% 
   rmse(truth = pct_vax, .pred)
@@ -465,53 +530,6 @@ print(RMSE_null_train)
 # Above wee see that the model with only unemployment does not perform that much 
 # better than the null
 
-
-
-
-#UNEMPLOYMENT
-
-# Here I create a  recipe for the simple model fit with only unemployment.
-fit_recipe_unmeployment <- recipe(pct_vax ~ unemployment , data = train_data)
-
-
-# Use the workflow() package to create a
-# simple workflow that fits a  simple lm 
-
-vax_wflow_unemployment <- 
-  workflow() %>% 
-  add_model(lr_mod) %>% 
-  add_recipe(fit_recipe_unmeployment)
-
-# Fitting the model
-vax_fit_unemployment <- 
-  vax_wflow_unemployment %>% 
-  fit(data = train_data)
-
-# Extracting Model/Recipes with Parsnip
-vax_fit_unemployment %>% 
-  extract_fit_parsnip() %>% 
-  tidy()
-
-
-# Obtaining Predictions
-predict(vax_fit_unemployment , train_data)
-
-vax_aug_unemployment <- 
-  augment(vax_fit_unemployment , train_data)
-
-vax_aug_unemployment %>%
-  select(pct_vax)
-
-
-# Calculating Root RMSE 
-rmse_train_unemployment <- vax_aug_unemployment %>% 
-  rmse(truth = pct_vax, .pred)
-
-# This RMSE for unemployment = 14.2
-rmse_train_unemployment
-
-# Null Model=14.4
-print(RMSE_null_train)
 
 
 
@@ -556,6 +574,22 @@ vax_aug_poverty %>%
 # Calculating Root RMSE 
 rmse_train_poverty <- vax_aug_poverty %>% 
   rmse(truth = pct_vax, .pred)
+
+
+jpeg(file = "results/poverty_simple_pred_vs_obs.jpeg")
+poverty_simple_predicted_vs_observed <- plot(vax_aug_poverty$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
+                                                  xlab="Predicted", ylab="Observed", 
+                                                  main= "Predicted vs Observed from Poverty Model on Train Data")
+abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+dev.off()
+
+
+jpeg(file = "results/poverty_simple_residuals.jpeg")
+#residuals
+poverty_simple_residuals <- plot(vax_aug_poverty$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from Poverty Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
+
 
 # This RMSE for unemployment = 14.0
 rmse_train_poverty
@@ -612,6 +646,22 @@ vax_aug_locality %>%
 rmse_train_locality <- vax_aug_locality %>% 
   rmse(truth = pct_vax, .pred)
 
+
+jpeg(file = "results/locality_simple_pred_vs_obs.jpeg")
+locality_simple_predicted_vs_observed <- plot(vax_aug_locality$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
+                                                  xlab="Predicted", ylab="Observed", 
+                                                  main= "Predicted vs Observed from Locality Model on Train Data")
+abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+dev.off()
+
+
+jpeg(file = "results/locality_simple_residuals.jpeg")
+#residuals
+locality_simple_residuals <- plot(vax_aug_locality$.pred-train_data$pct_vax, ylab="Residuals", main= "Residuals from Locality Model on Train Data")
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
+dev.off()
+
+
 # This RMSE for locality = 14.2
 rmse_train_locality
 
@@ -644,7 +694,7 @@ print(test_performance)
 test_predictions <- final_fit %>% collect_predictions()
 
 
-
+quartz()
 #predicted versus observed
 plot(test_predictions$.pred,test_data$pct_vax, xlim =c(0,100), ylim=c(0,100))
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
@@ -672,15 +722,19 @@ print(test_performance1)
 test_predictions1 <- final_fit1 %>% collect_predictions()
 
 
-
+jpeg(file = "results/simple_pred_vs_obs_final.jpeg")
 #predicted versus observed
 plot(test_predictions1$.pred,test_data$pct_vax, xlim =c(0,100), ylim=c(0,100), xlab="Predicted", ylab="Observed", 
      main= "Predicted vs Observed from Simple Model on Test Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+dev.off()
 
+
+
+jpeg(file = "results/simple_residuals_final.jpeg")
 #residuals
 plot(test_predictions1$.pred-test_data$pct_vax, ylab="Residuals", main= "Residuals from Simple Model on Test Data")
 abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
-
+dev.off()
 
 
