@@ -409,9 +409,7 @@ tree_wf <- workflow() %>%
   add_recipe(fit_recipe)
 
 
-#see a plot of performance for different tuning parameters
-tree_tune_res %>% autoplot()
-
+#tuning the grid
 
 tree_grid <- grid_regular(cost_complexity(),
                           tree_depth(),
