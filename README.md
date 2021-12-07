@@ -7,7 +7,7 @@ The final draft is located in the products tab under the manuscript folder. It i
 
 HERE ARE THE STEPS TO REPRODUCE MY ANALYSIS
 
-1) Run the Processing_Cleaning.R located in the processing_code folder. This loads in all the datasets, merges, and cleans them.
+1) Run the Processing_Cleaning.R located in the processing_code folder. This loads in all the datasets, merges, and cleans them. NOTE: If for some reason this script gives you errors, run the Processing_Cleaning_ALTERNATE.R instead. One of my reviewers got some weird that I don't fully understand so I made an alternate version of that shows up on yours. Both should produce the same processed dataset.
 
 2) Run the Descriptive_Exploration.Rmd located in the analysis_code folder. This performs descriptive analysis on the data, producing several tables and plots to be used in the manuscript.
 
