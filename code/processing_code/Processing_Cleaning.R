@@ -3,16 +3,16 @@
 # Packages
 
 #the following code loads different packages 
-library(readr)
-library(plyr)
-library(dplyr)
-library(here)
-library(tidyverse)
-library(gridExtra)
-library(tidyr)
-library(robustbase)
-library(usmap)
-library(ggplot2)
+library(readr) #loads in data
+library(plyr) #data wrangling
+library(dplyr) #data wrangling
+library(here) #sets paths
+library(tidyverse) #tidying data
+library(gridExtra) #plotting on grid
+library(tidyr) #tidying data
+library(robustbase) # for merging
+library(usmap) #for plotting on map
+library(ggplot2) #for plotting
 
 
 

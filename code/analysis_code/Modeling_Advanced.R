@@ -1,25 +1,45 @@
+# ADVANCED MODELING SCRIPT
+
+# The following script performs several different modeling approaches to 
+# the data using the tidy models framework. First we do a little bit of 
+# data management before modeling and also check the correlations between variables
+
+# Then we perform a test/train split on the data, putting 3/4 into the train set.
+# Then we run the following models in this order, plotting diagnostics and 
+# calculating the RMSE for each. For the LASSO and Decision Tree models, 
+# we used a 5-fold cross-validation, 5 times repeated, creating a 
+# resample object for the training data. 
+
+# 1) Full Model
+# 2) Simple model with only Education as the predictor
+# 3) LASSO Model
+# 4) Decision Tree Model
+
+# We also run a few other simple models for each variable 
+# and compare the RMSE with the null.
+
+# As you'll see, none of the models perform that well,
+# but our main predictor seems to be the most important variable.
+
 
 #loading packages
-library(broom)
-library(vip)
+library(broom) #tidying tables
+library(vip) #plotting decision tree importance
 library(here) #for data loading/saving
-library(tidyverse)
-library(recipes)
-library(tidymodels)
-library(workflowr) 
-library(parsnip)
-library(rsample)
-library(rpart)
-library(glmnet)
-library(ranger)
-library(modeldata)
-library(rpart.plot)
-library(dials)
-library(workflows)
-library(vip)
-library(glmnet)
-library(yardstick)
-library(doParallel) # for parallel computing 
+library(tidyverse) #wide usage of tidying data
+library(recipes) #for model recipes
+library(tidymodels) #for modeling framework
+library(workflowr) #creates workflow
+library(parsnip) #model fitting
+library(rsample) #creating resampling object for CV
+library(rpart) #plotting decision tree
+library(glmnet) #setting engine
+library(ranger) #setting engine
+library(modeldata) # for modeling
+library(rpart.plot) #plotting decision tree
+library(dials) #for tuning parameters
+library(workflows) #creating workflows
+library(yardstick) #model performance
 
 # setting path
 data_loc <- here::here("data","processed_data","processeddata.rds")

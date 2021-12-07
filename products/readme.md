@@ -1,8 +1,8 @@
 # Hello. Welcome to my project github. 
 
-The following analysis examines the relationship between education level and vaccination rate (for people over age 12) at the county level for all counties in the 50 US states. 
+The 'products' folder contains the final draft manuscript, supplemental materials, and materials used for citations. It also contains an 'archive' folder which houses earlier drafts and notes.
 
-The final draft my project is located in the products tab under the manuscript folder. It includes a more polished draft of the paper with plots and tables and full analysis trying several different models (simple, multivariate, LASSO, decision tree). We use a test/train split and Cross-Validation for the LASSO and decision tree models. If you knit that to HTML, it should reproduce what I did. 
+The final draft is located in the products tab under the manuscript folder. It includes a polished mansucscript of the paper with plots and tables and full analysis trying several different models (simple, multivariate, LASSO, decision tree). There is also a supplemental file that includes plots and tables referenced in the text. 
 
 HERE ARE THE STEPS TO REPRODUCE MY ANALYSIS
 
@@ -14,5 +14,5 @@ HERE ARE THE STEPS TO REPRODUCE MY ANALYSIS
 
 4) Run the Modeling_Advanced.R located in the analysis_code folder. This runs the full analysis trying several different models (simple, multivariate, LASSO, decision tree) and saves different plots and tables needed for the manuscript.
 
-5) Run the Final_Draft.Rmd located in the products-> manuscript folder. Knitting this document will produce my submission for this part of the project. It now includes references that were imported from Endnote. The reference file is located in the manuscript tab and named bibliography.bibtex. Supplemental_Material.Rmd contains plots and tables mentioned in the main text, but not included. 
+5) Run the Final_Draft.Rmd located in the products-> manuscript folder. Knitting this document will produce my manuscript. It includes references that were imported from Endnote. The reference file is located in the manuscript tab and named bibliography.bibtex. Supplemental_Material.Rmd contains plots and tables mentioned in the main text, but not included. 
 

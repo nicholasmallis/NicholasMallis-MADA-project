@@ -5,17 +5,19 @@ date: "11/28/2021"
 output: html_document
 ---
 
+
+The following RMD runs exploratory linear models on the processed dataset and calculates performance statistics for each. We first run a full model with all variables and a simple model with each variable and the outcome. 
 ```{r}
 # MODELING SCRIPT
 
 #loading packages
-library(here)
-library(tidyverse)
-library(recipes)
-library(tidymodels)
-library(workflowr) 
-library(parsnip)
-library(rsample)
+library(here) #for data loading/saving
+library(tidyverse) #wide usage of tidying data
+library(recipes) #for model recipes
+library(tidymodels) #for modeling framework
+library(workflowr) #creating workflows
+library(parsnip) #model fitting
+
 
 
 # setting path

@@ -5,20 +5,32 @@ date: "11/11/2021"
 output: html_document
 ---
 
+###Data Exploration
+The following document loads in the processed data and explores the data creating tables and plots. Here is a list of the tasks completed.
+
+1) Calculating a five number summary for each continuous variable
+2) Calculating frequencies and proportions for the one categorical variable
+3) Calculating the frequency and percent of missingness among all variables
+4) Exploring the distribution of each variable by plotting a histogram for each continuous variable and a bar chart for the one categorical variable.
+5) Creating a table of summary statistics for the main text.
+6) Creating scatter plots with each continuous predictor and the outcome. Each scatter plot has a linear regression overlay
+7) Creating a stratified box plot for our one categorical predictor
+8) Mapping vaccination rates by county on the US Map.
+
 
 Loading packages and then importing processed data
 ```{r message=FALSE}
 #the following code loads different packages 
-library(readr)
-library(plyr)
-library(dplyr)
-library(here)
-library(tidyverse)
-library(gridExtra)
-library(tidyr)
-library(robustbase)
-library(usmap)
-library(ggplot2)
+library(readr) #reading in data
+library(plyr) #data wrangling
+library(dplyr) #data wrangling
+library(here) #setting paths
+library(tidyverse) #tidying data
+library(gridExtra) #plotting 
+library(tidyr)#tidying data
+library(robustbase) #merging
+library(usmap) #plotting map
+library(ggplot2) #plotting
 
 
 # setting path
