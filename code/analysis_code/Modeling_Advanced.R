@@ -54,7 +54,7 @@ glimpse(mydata)
 # first we need to convert locality to a factor
 mydata <- mydata %>%
   mutate(locality= as.factor(locality)
-         )
+  )
 
 # now we take away the variables we don't need for modeling
 mydata <- mydata[, -c(1,4,5)]
@@ -162,8 +162,8 @@ rmse_train <- vax_aug %>%
 
 jpeg(file = "results/full_pred_vs_obs.jpeg")
 full_predicted_vs_observed <- plot(vax_aug$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
-                                     xlab="Predicted", ylab="Observed", 
-                                     main= "Predicted vs Observed from Full Model on Train Data")
+                                   xlab="Predicted", ylab="Observed", 
+                                   main= "Predicted vs Observed from Full Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
 dev.off()
 
@@ -224,8 +224,8 @@ vax_aug_simple %>%
 
 jpeg(file = "results/simple_pred_vs_obs.jpeg")
 simple_predicted_vs_observed <- plot(vax_aug_simple$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
-                                    xlab="Predicted", ylab="Observed", 
-                                    main= "Predicted vs Observed from Simple Model on Train Data")
+                                     xlab="Predicted", ylab="Observed", 
+                                     main= "Predicted vs Observed from Simple Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
 dev.off()
 
@@ -521,8 +521,8 @@ vax_aug_unemployment %>%
 
 jpeg(file = "results/unemployment_simple_pred_vs_obs.jpeg")
 unemployment_simple_predicted_vs_observed <- plot(vax_aug_unemployment$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
-                                     xlab="Predicted", ylab="Observed", 
-                                     main= "Predicted vs Observed from Unemployment Model on Train Data")
+                                                  xlab="Predicted", ylab="Observed", 
+                                                  main= "Predicted vs Observed from Unemployment Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
 dev.off()
 
@@ -596,8 +596,8 @@ rmse_train_poverty <- vax_aug_poverty %>%
 
 jpeg(file = "results/poverty_simple_pred_vs_obs.jpeg")
 poverty_simple_predicted_vs_observed <- plot(vax_aug_poverty$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
-                                                  xlab="Predicted", ylab="Observed", 
-                                                  main= "Predicted vs Observed from Poverty Model on Train Data")
+                                             xlab="Predicted", ylab="Observed", 
+                                             main= "Predicted vs Observed from Poverty Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
 dev.off()
 
@@ -667,8 +667,8 @@ rmse_train_locality <- vax_aug_locality %>%
 
 jpeg(file = "results/locality_simple_pred_vs_obs.jpeg")
 locality_simple_predicted_vs_observed <- plot(vax_aug_locality$.pred,train_data$pct_vax, xlim =c(0,100), ylim=c(0,100), 
-                                                  xlab="Predicted", ylab="Observed", 
-                                                  main= "Predicted vs Observed from Locality Model on Train Data")
+                                              xlab="Predicted", ylab="Observed", 
+                                              main= "Predicted vs Observed from Locality Model on Train Data")
 abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
 dev.off()
 
@@ -697,36 +697,9 @@ print(RMSE_null_train)
 
 # Model Selection
 
-# I'll go with the  LASSO. So let's give that model a final check.
 
-
-final_fit <- best_lasso_wf  %>% last_fit(data_split)
-
-
-#Let's look at the performance of the final fit
-
-test_performance <- final_fit %>% collect_metrics()
-print(test_performance)
-
-
-test_predictions <- final_fit %>% collect_predictions()
-
-
-quartz()
-#predicted versus observed
-plot(test_predictions$.pred,test_data$pct_vax, xlim =c(0,100), ylim=c(0,100))
-abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
-#residuals
-plot(test_predictions$.pred-test_data$pct_vax)
-abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
-
-
-
-
-
-
-
-# And now a SIMPLE MODEL
+# And now the final fit on the SIMPLE MODEL. Since none of them seem to do a great job, we go
+# with this one.
 
 final_fit1 <- vax_wflow_simple  %>% last_fit(data_split)
 
@@ -754,5 +727,36 @@ jpeg(file = "results/simple_residuals_final.jpeg")
 plot(test_predictions1$.pred-test_data$pct_vax, ylab="Residuals", main= "Residuals from Simple Model on Test Data")
 abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
 dev.off()
+
+
+
+
+
+
+
+
+
+
+#  LASSO. So let's give that model a final check.
+
+
+final_fit <- best_lasso_wf  %>% last_fit(data_split)
+
+
+#Let's look at the performance of the final fit
+
+test_performance <- final_fit %>% collect_metrics()
+print(test_performance)
+
+
+test_predictions <- final_fit %>% collect_predictions()
+
+
+#predicted versus observed
+plot(test_predictions$.pred,test_data$pct_vax, xlim =c(0,100), ylim=c(0,100))
+abline(a=0,b=1, col = 'red') #45 degree line, along which the results should fall
+#residuals
+plot(test_predictions$.pred-test_data$pct_vax)
+abline(a=0,b=0, col = 'red') #straight line, along which the results should fall
 
 
