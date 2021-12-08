@@ -70,7 +70,7 @@ vax$FIPS[vax$FIPS=='UNK'] <- NA
 #now let's convert to numeric.
 #and while we're at it, we'll go ahead an convert Series_Complete_12PlusPop_Pct to numeric as well
 
-vax$FIPS <- as.numeric(vax$FIPS)
+vax$FIPS <- as.numeric(as.character(vax$FIPS))
 vax$Series_Complete_12PlusPop_Pct <- as.numeric(vax$Series_Complete_12PlusPop_Pct)
 
 #looks like it was recorded as 0 for 74 counties.
